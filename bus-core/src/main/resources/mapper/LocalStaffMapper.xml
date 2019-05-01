@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.LocalStaffMapper">
+    <insert id="addLocalStaff" parameterType="LocalStaffEntity">
+        INSERT INTO local_staff
+        (local_staff_id,local_staff_job_number,local_staff_name, local_staff_region_id,local_staff_region_name,local_staff_province_id,local_staff_province_name,local_staff_city_id,local_staff_city_name,local_staff_county_id,local_staff_county_name,update_time, create_time)
+        VALUES
+        (#{localStaffId},#{localStaffJobNumber},#{localStaffName},#{localStaffRegionId},#{localStaffRegionName},#{localStaffProvinceId},#{localStaffProvinceName},#{localStaffCityId},#{localStaffCityName},#{localStaffCountyId},#{localStaffCountyName},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+
+    <update id="updateLocalStaff" parameterType="LocalStaffEntity">
+        UPDATE local_staff set
+        local_staff_job_number = #{localStaffJobNumber},
+        local_staff_name = #{localStaffName},
+        local_staff_region_id = #{localStaffRegionId},
+        local_staff_region_name = #{localStaffRegionName},
+        local_staff_province_id = #{localStaffProvinceId},
+        local_staff_province_name = #{localStaffProvinceName},
+        local_staff_city_id = #{localStaffCityId},
+        local_staff_city_name = #{localStaffCityName},
+        local_staff_county_id = #{localStaffCountyId},
+        local_staff_county_name = #{localStaffCountyName},
+        update_time=unix_timestamp(now())*1000
+        WHERE
+        local_staff_id = #{localStaffId}
+    </update>
+
+    <select id="findLocalStaffById" parameterType="String" resultType="LocalStaffEntity">
+        SELECT * FROM local_staff WHERE local_staff_id = #{id}
+    </select>
+
+    <select id="getCountWhenJobNumberEqualsButIdNotEquals" parameterType="LocalStaffEntity" resultType="Long">
+        select count(*) from local_staff where local_staff_job_number=#{localStaffJobNumber} and local_staff_id!=#{localStaffId}
+    </select>
+
+    <select id="findLocalStaffByJobNumber" parameterType="String" resultType="LocalStaffEntity">
+        select * from local_staff where local_staff_job_number=#{value}
+    </select>
+</mapper>

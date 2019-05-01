@@ -1,0 +1,10 @@
+{
+  "id": 16,
+  "tag": "system",
+  "event": "cityUpdate",
+  "eventTime": 1528799718000,
+  "data": {
+    "cityId": "2",
+    "cityName": "泰安2"
+  }
+}

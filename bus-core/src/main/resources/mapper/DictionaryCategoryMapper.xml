@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.user.mapper.DictionaryCategoryMapper">
+    <sql id="base_where">
+        <if test="label != null  and label != ''">
+            and label = #{label}
+        </if>
+    </sql>
+
+    <insert id="addDictionaryCategory" parameterType="DictionaryCategoryEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+        INSERT INTO dictionary_category
+        (label,update_time,create_time)
+        values
+        (#{label},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+
+    <delete id="deleteDictionaryCategoryById" parameterType="Long">
+        DELETE FROM
+            dictionary_category
+        WHERE
+            id=#{id}
+    </delete>
+
+    <update id="updateDictionaryCategory" parameterType="DictionaryCategoryEntity">
+        UPDATE
+        dictionary_category
+        SET
+        <if test="label != null">label = #{label},</if>
+        update_time=unix_timestamp(now())*1000, create_time=unix_timestamp(now())*1000
+        WHERE
+        id =#{id}
+    </update>
+
+    <select id="findDictionaryCategoryById" parameterType="Long" resultType="DictionaryCategoryEntity">
+       SELECT
+       *
+       FROM dictionary_category WHERE id=#{id}
+    </select>
+
+    <select id="findDictionaryCategoryByPage" parameterType="DictionaryCategoryEntity" resultType="DictionaryCategoryEntity">
+        select
+        *
+        from dictionary_category
+        WHERE 1=1
+        <include refid="base_where" />
+        ORDER BY id ASC
+    </select>
+
+    <select id="findDictionaryCategory" resultType="DictionaryCategoryEntity">
+        select
+        *
+        from dictionary_category
+    </select>
+</mapper>

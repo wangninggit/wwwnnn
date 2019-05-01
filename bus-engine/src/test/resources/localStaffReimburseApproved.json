@@ -1,0 +1,21 @@
+{
+  "id": 11,
+  "tag": "logistics",
+  "event": "localStaffReimburseApproved",
+  "eventTime": 1528799524000,
+  "data": {
+    "localStaffId": "l001",
+    "localStaffName": "王芳",
+    "localStaffLocation": {
+      "regionId": "1",
+      "regionName": "华北",
+      "provinceId": "1",
+      "provinceName": "山东",
+      "cityId": "2",
+      "cityName": "泰安",
+      "countyId": "3",
+      "countyName": "肥城"
+    },
+    "total": 5000000
+  }
+}

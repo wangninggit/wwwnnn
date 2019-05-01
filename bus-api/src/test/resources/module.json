@@ -1,0 +1,116 @@
+[
+  {
+    "id": 1,
+    "name": "dashboard",
+    "label": "首页",
+    "description": "包含今日各种维度报表及走势图"
+  },
+  {
+    "id": 2,
+    "name": "query:business-detail",
+    "label": "业务明细表",
+    "description": "以订单为维度按时间查询订单数据"
+  },
+  {
+    "id": 3,
+    "name": "query:daily-detail",
+    "label": "日统计查询",
+    "description": "以天为周期的统计查询"
+  },
+  {
+    "id": 4,
+    "name": "query:region-contrast",
+    "label": "大区对比",
+    "description": "按大区分组进行对比"
+  },
+  {
+    "id": 5,
+    "name": "query:province-contrast",
+    "label": "省份对比",
+    "description": "按省份分组进行对比"
+  },
+  {
+    "id": 6,
+    "name": "query:testing-item-contrast",
+    "label": "检测项目对比",
+    "description": "按检测项目分组进行对比"
+  },
+  {
+    "id": 7,
+    "name": "query:income-detail",
+    "label": "收入明细表",
+    "description": "财务所需的发票收入明细汇总"
+  },
+  {
+    "id": 8,
+    "name": "report:business-detail",
+    "label": "业务明细表",
+    "description": "以订单为维度按时间查询订单数据"
+  },
+  {
+    "id": 9,
+    "name": "report:region-contrast",
+    "label": "大区对比",
+    "description": "按大区分组进行对比"
+  },
+  {
+    "id": 10,
+    "name": "report:province-contrast",
+    "label": "省份对比",
+    "description": "按省份分组进行对比"
+  },
+  {
+    "id": 11,
+    "name": "report:testing-item-contrast",
+    "label": "检测项目对比",
+    "description": "按检测项目分组进行对比"
+  },
+  {
+    "id": 12,
+    "name": "report:profits",
+    "label": "利润表",
+    "description": "按大区分组展示业务利润"
+  },
+  {
+    "id": 13,
+    "name": "report:income-detail",
+    "label": "收入明细表",
+    "description": "财务所需的发票收入明细汇总"
+  },
+  {
+    "id": 14,
+    "name": "page",
+    "label": "模块管理",
+    "description": "模块管理"
+  },
+  {
+    "id": 15,
+    "name": "user",
+    "label": "用户管理",
+    "description": "用户管理"
+  },
+  {
+    "id": 16,
+    "name": "role",
+    "label": "角色管理",
+    "description": "角色管理"
+  },
+  {
+    "id": 17,
+    "name": "permission",
+    "label": "权限管理",
+    "description": "权限管理"
+  },
+  {
+    "id": 18,
+    "name": "query:order-without-invoice",
+    "label": "未开票明细表",
+    "description": "未开票明细表"
+  },
+  {
+    "id": 19,
+    "name": "query:order-trend-month-avg",
+    "label": "月平均销量表",
+    "description": "月平均销量表"
+  }
+]

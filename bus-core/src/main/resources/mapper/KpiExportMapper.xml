@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.kpi.mapper.KpiExportMapper">
+    <insert id="addExportExcel" parameterType="KpiExportEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+        INSERT INTO kpi_export
+        (original_file_name, storage_file_name, kpi_date,export_time,kpi_module,url)
+        VALUES
+        (#{originalFileName},#{storageFileName},#{kpiDate},unix_timestamp(now())*1000,#{kpiModule},#{url})
+    </insert>
+
+    <select id="getExportHistory" resultType="KpiHistoryDto">
+        select
+            kpi_export.id export_id,
+            kpi_export.original_file_name export_file_name,
+            kpi_export.export_time export_time,
+            kpi_export.kpi_date kpi_date,
+            kpi_upload.id upload_id,
+            kpi_upload.original_file_name upload_file_name
+        from kpi_export, kpi_upload where kpi_export.kpi_module = kpi_upload.id
+    </select>
+
+    <select id="findRecordById" parameterType="Long" resultType="KpiExportEntity">
+        select * from kpi_export where id=#{value}
+    </select>
+</mapper>

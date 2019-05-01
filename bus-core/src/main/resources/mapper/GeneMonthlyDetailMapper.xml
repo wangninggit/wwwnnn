@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.GeneMonthlyDetailMapper">
+    <!--<sql id="selectFiledSql">-->
+        <!--rg.order_income,-->
+        <!--rg.cash_income,-->
+        <!--rg.finance_confirm_income,-->
+        <!--rg.testing_item_cost,-->
+        <!--rg.integral_cost,-->
+        <!--rg.order_place_count,-->
+        <!--rg.order_place_avg_cost,-->
+        <!--rg.order_cancel_count,-->
+        <!--rg.order_cancel_avg_cost,-->
+        <!--IFNULL(rl.total,0) total,-->
+        <!--(rg.finance_confirm_income-rg.testing_item_cost-IFNULL(rl.total,0)) profit-->
+    <!--</sql>-->
+
+    <sql id="selectLeftFiledSql">
+        (SUM(IFNULL(finance_confirm_income,0))-SUM(IFNULL(testing_item_confirm_cost,0))) profit,
+        <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+    </sql>
+
+    <insert id="addGeneMonthlyDetail" parameterType="GeneDetailBaseEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+       INSERT INTO gene_monthly_detail
+        (<include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailInsertFiledSql" />)
+        values
+        (<include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailInsertValueSql" />)
+    </insert>
+    <update id="updateGeneMonthlyDetail" parameterType="GeneDetailBaseEntity">
+        UPDATE
+            gene_monthly_detail
+        SET
+            <include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailUpdateSql" />
+        WHERE
+          id=#{id}
+    </update>
+    <update id="updateGeneMonthlyDetailByOrderIdAndMonthStr" parameterType="GeneDetailBaseEntity">
+        UPDATE
+            gene_monthly_detail
+        SET
+            <include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailUpdateSql" />
+        WHERE
+          order_id=#{orderId} AND month_str=#{monthStr}
+    </update>
+    <select id="getGeneMonthlyDetailByOrderId" parameterType="String" resultType="GeneDetailBaseEntity">
+      SELECT * FROM gene_monthly_detail WHERE order_id=#{orderId}
+    </select>
+    <select id="getGeneMonthlyDetailByOrderIdAndMonthStr" parameterType="GeneDetailBaseEntity" resultType="GeneDetailBaseEntity">
+      SELECT * FROM gene_monthly_detail WHERE order_id=#{orderId} AND month_str=#{monthStr}
+    </select>
+    <select id="getGeneMonthlyDetailById" parameterType="Long" resultType="GeneDetailBaseEntity">
+      SELECT * FROM gene_monthly_detail WHERE id=#{id}
+    </select>
+    <select id="getHalfYearDetailReportGroupByMonthStr" parameterType="String" resultType="BusinessDetailResult">
+      SELECT month_str date_str,
+        <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+      FROM gene_monthly_detail
+      WHERE half_year_str = #{halfYearStr}
+      GROUP BY month_str
+    </select>
+    <select id="countHalfYearDetailReportByHalfYearStr" parameterType="String" resultType="BusinessDetailResult">
+        SELECT
+        <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+        FROM gene_monthly_detail
+        WHERE half_year_str = #{halfYearStr}
+    </select>
+    <select id="getYearDetailReportGroupByMonthStr" parameterType="String" resultType="BusinessDetailResult">
+      SELECT month_str date_str,
+        <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+      FROM gene_monthly_detail
+      WHERE year_str = #{yearStr}
+      GROUP BY month_str
+    </select>
+    <select id="countYearDetailReportByYearStr" parameterType="String" resultType="BusinessDetailResult">
+        SELECT
+        <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+        FROM gene_monthly_detail
+        WHERE year_str = #{yearStr}
+    </select>
+    <select id="getProfitByMonthStr" parameterType="String" resultType="ProfitReportDto">
+        select
+            region.region_id region_id,
+            region.region_name region_name,
+            <include refid="selectLeftFiledSql" />
+        FROM
+        `region`
+        LEFT JOIN `gene_monthly_detail` ON `region`.region_id = `gene_monthly_detail`.local_staff_region_id
+        AND gene_monthly_detail.month_str = #{monthStr}
+        GROUP BY region.region_id
+    </select>
+    <select id="countProfitByMonthStr" parameterType="String" resultType="ProfitReportDto">
+        select
+
+        <include refid="selectLeftFiledSql" />
+        FROM
+        `region`
+        LEFT JOIN `gene_monthly_detail` ON `region`.region_id = `gene_monthly_detail`.local_staff_region_id
+        AND gene_monthly_detail.month_str = #{monthStr}
+    </select>
+
+    <select id="getSnapshootRecordByMonthlyStrAndGroupByRegionId" parameterType="String" resultType="RegionSnapshootRecordDto">
+        select
+            region_id,
+            region_name,
+            <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+        from region
+        LEFT JOIN gene_monthly_detail ON
+            local_staff_region_id = region_id AND
+            month_str=#{value}
+        GROUP BY
+            region_id
+    </select>
+    <select id="getSnapshootRecordByMonthlyStrAndGroupByProvinceId" parameterType="String" resultType="ProvinceSnapshootRecordDto">
+        select
+            province_id,
+            province_name,
+        <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+        from province
+        LEFT JOIN gene_monthly_detail ON
+            local_staff_province_id = province_id AND
+            month_str=#{value}
+        GROUP BY
+            province_id
+    </select>
+    <select id="queryOrderTrendYear" parameterType="DateRangeStrDto" resultType="DashboardOrderTrendDto">
+        SELECT
+          month_str date,
+          SUM(IFNULL(order_place_count,0)) order_place_count,
+          SUM(IFNULL(order_place_cost,0)) order_place_cost
+        FROM
+        gene_monthly_detail
+        WHERE
+        month_str <![CDATA[ >= ]]> #{startDateStr} AND
+        month_str <![CDATA[ <= ]]> #{endDateStr}
+        GROUP BY month_str
+    </select>
+
+    <select id="getMonthKpiByLocalStaffId" parameterType="String" resultType="KpiResultDto">
+        select month_str,sum(finance_confirm_income) kpi from gene_monthly_detail where local_staff_id=#{value} group by month_str
+    </select>
+</mapper>

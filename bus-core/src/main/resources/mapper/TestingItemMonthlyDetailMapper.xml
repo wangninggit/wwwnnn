@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.TestingItemMonthlyDetailMapper">
+
+    <insert id="addTestingItemDetail" parameterType="TestingItemDetailBaseEntity">
+        INSERT INTO testing_item_monthly_detail
+        <include refid="com.viathink.core.business.gene.mapper.TestingItemDetailMapper.detailInsertFiledSql"/>
+        VALUES
+        <include refid="com.viathink.core.business.gene.mapper.TestingItemDetailMapper.detailInsertValueSql"/>
+    </insert>
+
+    <select id="findTestingItemDetailByOrderIdAndTestingItemIdAndDatelyStr" parameterType="TestingItemDetailBaseEntity" resultType="TestingItemDetailBaseEntity">
+        SELECT * FROM testing_item_monthly_detail
+        WHERE
+              order_id=#{orderId}
+          AND testing_item_id=#{testingItemId}
+          AND month_str=#{monthStr}
+    </select>
+
+    <update id="updateTestingItemDetailByOrderIdAndTestingItemIdAndDatelyStr" parameterType="TestingItemDetailBaseEntity">
+        UPDATE testing_item_monthly_detail SET
+        <include refid="com.viathink.core.business.gene.mapper.TestingItemDetailMapper.detailUpdateSql"/>
+        WHERE
+        order_id = #{orderId} AND
+        testing_item_id = #{testingItemId} AND
+        month_str = #{monthStr}
+    </update>
+
+    <select id="getSnapshootRecordByDatelyStrAndGroupByTestingItemId" parameterType="String" resultType="TestingItemSnapshootRecordDto">
+        select
+            <include refid="com.viathink.core.business.gene.mapper.TestingItemDailyDetailMapper.selectGroupFeildSql"/>
+        from testing_item_tab
+        LEFT JOIN testing_item_monthly_detail ON
+            testing_item_tab.testing_item_id = testing_item_monthly_detail.testing_item_id AND
+            month_str = #{value}
+        GROUP BY
+            testing_item_id
+    </select>
+</mapper>

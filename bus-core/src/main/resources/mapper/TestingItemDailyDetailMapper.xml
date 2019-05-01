@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.TestingItemDailyDetailMapper">
+
+    <insert id="addTestingItemDetail" parameterType="TestingItemDetailBaseEntity">
+        INSERT INTO testing_item_daily_detail
+        <include refid="com.viathink.core.business.gene.mapper.TestingItemDetailMapper.detailInsertFiledSql"/>
+        VALUES
+        <include refid="com.viathink.core.business.gene.mapper.TestingItemDetailMapper.detailInsertValueSql"/>
+    </insert>
+
+    <select id="findTestingItemDetailByOrderIdAndTestingItemIdAndDatelyStr" parameterType="TestingItemDetailBaseEntity" resultType="TestingItemDetailBaseEntity">
+        SELECT * FROM testing_item_daily_detail
+        WHERE
+              order_id=#{orderId}
+          AND testing_item_id=#{testingItemId}
+          AND day_str=#{dayStr}
+    </select>
+
+    <update id="updateTestingItemDetailByOrderIdAndTestingItemIdAndDatelyStr" parameterType="TestingItemDetailBaseEntity">
+        UPDATE testing_item_daily_detail SET
+        <include refid="com.viathink.core.business.gene.mapper.TestingItemDetailMapper.detailUpdateSql"/>
+        WHERE
+        order_id = #{orderId} AND
+        testing_item_id = #{testingItemId} AND
+        day_str = #{dayStr}
+    </update>
+
+    <sql id="selectGroupFeildSql">
+        testing_item_tab.testing_item_id testing_item_id,
+		testing_item_tab.testing_item testing_item,
+		sum(IFNULL(testing_item_order_income,0)) testing_item_order_income,
+		sum(IFNULL(testing_item_cash_income,0)) testing_item_cash_income,
+		sum(IFNULL(testing_item_finance_confirm_income,0)) testing_item_finance_confirm_income,
+		sum(IFNULL(testing_item_record_cost,0)) testing_item_record_cost,
+		sum(IFNULL(testing_item_confirm_record_cost,0)) testing_item_confirm_record_cost,
+		sum(IFNULL(testing_item_place_count,0)) testing_item_place_count,
+		sum(IFNULL(testing_item_cancel_count,0)) testing_item_cancel_count
+    </sql>
+    <select id="getSnapshootRecordByDatelyStrAndGroupByTestingItemId" parameterType="String" resultType="TestingItemSnapshootRecordDto">
+        select
+            <include refid="selectGroupFeildSql"/>
+        from testing_item_tab
+        LEFT JOIN testing_item_daily_detail ON
+            testing_item_tab.testing_item_id = testing_item_daily_detail.testing_item_id AND
+            day_str = #{value}
+        GROUP BY
+            testing_item_id
+
+    </select>
+    <select id="getSnapshootRecordByDatelyRangeAndTestingItemIdsAndGroupByTestingItemId" parameterType="QueryTestingItemContrastParamDto" resultType="TestingItemSnapshootRecordDto">
+        select
+            <include refid="selectGroupFeildSql"/>
+        from testing_item_tab
+        LEFT JOIN testing_item_daily_detail ON
+            testing_item_tab.testing_item_id = testing_item_daily_detail.testing_item_id AND
+            event_time <![CDATA[ >= ]]> #{startDate} AND
+            event_time <![CDATA[ < ]]> #{endDate}
+        GROUP BY
+            testing_item_id
+        <if test="testingItemIds != null  and testingItemIds != '' and testingItemIds.length > 0">
+            HAVING
+            testing_item_tab.testing_item_id IN
+            <foreach collection="testingItemIds" item="testingItemId" separator="," open="(" close=")">
+                #{testingItemId}
+            </foreach>
+        </if>
+        <if test="sortBy == '' or sortBy == null">
+            ORDER BY testing_item_order_income
+        </if>
+        <if test="sortBy == 'placeCount'">
+            ORDER BY testing_item_place_count
+        </if>
+        <if test="sortBy == 'orderIncome'">
+            ORDER BY testing_item_order_income
+        </if>
+        <if test="sortMode == '' or sortMode == null">
+            DESC
+        </if>
+        <if test="sortMode == 'desc'">
+            DESC
+        </if>
+        <if test="sortMode != 'desc'">
+            ASC
+        </if>
+    </select>
+</mapper>

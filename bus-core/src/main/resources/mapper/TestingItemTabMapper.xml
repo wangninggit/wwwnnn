@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.TestingItemTabMapper">
+
+    <insert id="addTestingItem"  parameterType="TestingItemTabEntity">
+        INSERT INTO testing_item_tab
+        (
+            testing_item_id,
+            testing_item,
+            testing_agency,
+            testing_agency_id,
+            testing_agency_address,
+            update_time,
+            create_time
+        )
+        VALUES
+        (
+             #{testingItemId},
+             #{testingItem},
+             #{testingAgency},
+             #{testingAgencyId},
+             #{testingAgencyAddress},
+             unix_timestamp(now())*1000,
+             unix_timestamp(now())*1000
+        )
+    </insert>
+
+    <update id="updateTestingItemById" parameterType="TestingItemTabEntity">
+        UPDATE testing_item_tab set
+            testing_item = #{testingItem},
+            testing_agency = #{testingAgency},
+            testing_agency_id = #{testingAgencyId},
+            testing_agency_address = #{testingAgencyAddress},
+            update_time = unix_timestamp(now())*1000
+        WHERE
+        testing_item_id = #{testingItemId}
+    </update>
+
+    <select id="findTestingItemById" parameterType="Integer" resultType="TestingItemTabEntity">
+        SELECT * FROM testing_item_tab WHERE testing_item_id=#{value}
+    </select>
+
+    <select id="findTestingItemList" resultType="TestingItemTabEntity">
+        SELECT * FROM testing_item_tab ORDER BY testing_item ASC
+    </select>
+
+</mapper>

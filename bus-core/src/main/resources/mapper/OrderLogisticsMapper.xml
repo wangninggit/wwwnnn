@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.OrderLogisticsMapper">
+    <select id="findOrderLogisticsByOrderId" parameterType="String" resultType="OrderLogisticsEntity">
+        SELECT * FROM order_logistics WHERE order_id=#{orderId}
+    </select>
+    <insert id="addOrderLogistics" parameterType="OrderLogisticsEntity">
+        INSERT INTO order_logistics
+        (
+        tag,
+        message_id,
+        record_id,
+        event,
+        event_time,
+        order_id,
+        logistics_type,
+        express_number,
+        express_company_name,
+        express_company_id,
+        update_time,
+        create_time
+        )
+        values
+        (
+        #{tag},
+        #{messageId},
+        #{recordId},
+        #{event},
+        #{eventTime},
+        #{orderId},
+        #{logisticsType},
+        #{expressNumber},
+        #{expressCompanyName},
+        #{expressCompanyId},
+        unix_timestamp(now())*1000,
+        unix_timestamp(now())*1000
+        )
+    </insert>
+</mapper>

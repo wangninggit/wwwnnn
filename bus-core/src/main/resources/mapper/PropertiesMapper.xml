@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.collection.mapper.PropertiesMapper">
+    <insert id="addProperty" parameterType="PropertiesEntity">
+       INSERT INTO properties
+        (id, type, type_int, type_varchar, update_time, create_time)
+        values
+        (#{id}, #{type}, #{typeInt}, #{typeVarchar}, unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+    <select id="findPropertyById" parameterType="String" resultType="PropertiesEntity">
+      SELECT * FROM properties WHERE id=#{id}
+    </select>
+    <update id="updateProperty" parameterType="PropertiesEntity">
+        UPDATE properties SET
+        type_varchar=#{typeVarchar},
+        type_int=#{typeInt},
+        update_time=unix_timestamp(now())*1000
+        WHERE id=#{id}
+    </update>
+</mapper>

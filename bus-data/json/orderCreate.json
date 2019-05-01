@@ -1,0 +1,59 @@
+{
+  "id": 1,
+  "tag": "order",
+  "event": "orderCreated",
+  "eventTime": 1528792076000,
+  "data": {
+    "orderId": "GTON-20180612-0001",
+    "orderNumber": "GTON-20180612-0001",
+    "orderCreatorId": "u001",
+    "orderCreatorName": "张伟",
+    "orderPrice": 2700000,
+    "patientName": "王伟",
+    "patientAddress": "山东省肥城市",
+    "patientGender": "male",
+    "patientIDCard": "370983176606150432",
+    "patientAge": 60,
+    "patientClinicalDiagnosis": "胰腺癌",
+    "testings": [
+      {
+        "testingItemId": 4001,
+        "testingAgency": "杰傲湃思",
+        "testingItem": "HER2（ERBB2）扩增",
+        "testingItemPrice": 1500000,
+        "testingItemCost": 1000000,
+        "testingAgencyId": 1001,
+        "testingAgencyAddress": "北京市海淀区",
+        "samplingTime": 1528792086000
+      },
+      {
+        "testingItemId": 4002,
+        "testingAgency": "杰傲湃思",
+        "testingItem": "PIK3CA基因突变",
+        "testingItemPrice": 1200000,
+        "testingItemCost": 1000000,
+        "testingAgencyId": 1001,
+        "testingAgencyAddress": "北京市海淀区",
+        "samplingTime": 1528792086000
+      }
+    ],
+    "localStaffId": "l001",
+    "localStaffName": "王芳",
+    "localStaffLocation": {
+      "regionId": "1",
+      "regionName": "华北",
+      "provinceId": "1",
+      "provinceName": "山东",
+      "cityId": "2",
+      "cityName": "泰安",
+      "countyId": "3",
+      "countyName": "肥城"
+    },
+    "hospitalName": "北医三院",
+    "hospitalAddress": "北京市",
+    "doctorId": "d001",
+    "doctorName": "李伟",
+    "integral": 1000
+  }
+
+}

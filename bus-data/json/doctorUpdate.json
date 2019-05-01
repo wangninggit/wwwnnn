@@ -1,0 +1,12 @@
+{
+  "id": 13,
+  "tag": "system",
+  "event": "doctorUpdate",
+  "eventTime": 1528799609000,
+  "data": {
+    "doctorId": "d001",
+    "doctorName": "李伟",
+    "hospitalName": "北医三院",
+    "hospitalAddress": "北京市海淀区"
+  }
+}

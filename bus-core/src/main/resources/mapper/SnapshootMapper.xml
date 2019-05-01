@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.SnapshootMapper">
+    <insert id="addSnapshoot" parameterType="SnapshootEntity">
+        INSERT INTO snapshoot
+        (type, time_range, day_str, month_str, year_str, quarter_str, half_year_str, record, update_time, create_time)
+        VALUES
+        (#{type},#{timeRange},#{dayStr},#{monthStr},#{yearStr},#{quarterStr},#{halfYearStr},#{record},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+    <update id="updateSnapshootById" parameterType="SnapshootEntity">
+        UPDATE snapshoot set
+          type = #{type},
+          time_range = #{timeRange},
+          day_str = #{dayStr},
+          month_str = #{monthStr},
+          year_str = #{yearStr},
+          quarter_str = #{quarterStr},
+          half_year_str = #{halfYearStr},
+          record = #{record},
+          recreate = #{recreate},
+          update_time=unix_timestamp(now())*1000
+        WHERE
+          id = #{id}
+    </update>
+    <select id="findSnapshootByClass" parameterType="SnapshootEntity" resultType="SnapshootEntity">
+        SELECT * FROM snapshoot WHERE type=#{type} AND time_range=#{timeRange}
+
+            <if test="timeRange == 'day'">
+                AND day_str = #{dayStr}
+            </if>
+            <if test="timeRange == 'month'">
+                AND month_str = #{monthStr}
+            </if>
+            <if test="timeRange == 'year'">
+                AND year_str = #{yearStr}
+            </if>
+            <if test="timeRange == 'quarter'">
+                AND quarter_str = #{quarterStr}
+            </if>
+
+            <if test="timeRange == 'halfYear'">
+                AND half_year_str = #{halfYearStr}
+            </if>
+    </select>
+    <select id="findAllSnapshoots" resultType="SnapshootEntity">
+        SELECT * FROM snapshoot
+    </select>
+    <select id="findSnapshootByLatestDate" parameterType="SnapshootEntity" resultType="SnapshootEntity">
+        SELECT * FROM snapshoot WHERE type=#{type} AND time_range=#{timeRange}
+
+        <if test="timeRange == 'day'">
+            ORDER BY day_str DESC
+        </if>
+        <if test="timeRange == 'month'">
+            ORDER BY month_str DESC
+        </if>
+        <if test="timeRange == 'year'">
+            ORDER BY year_str DESC
+        </if>
+        <if test="timeRange == 'quarter'">
+            ORDER BY quarter_str DESC
+        </if>
+
+        <if test="timeRange == 'halfYear'">
+            ORDER BY half_year_str DESC
+        </if>
+        limit 1
+    </select>
+    <select id="findSnapshootByRecreate" parameterType="Boolean" resultType="SnapshootEntity">
+        SELECT * FROM snapshoot WHERE recreate=#{recreate}
+    </select>
+    <select id="countSnapshootByTimeRangeAndDateStr" parameterType="SnapshootEntity" resultType="Long">
+        SELECT COUNT(*) FROM snapshoot WHERE time_range=#{timeRange}
+
+        <if test="timeRange == 'day'">
+            AND day_str = #{dayStr}
+        </if>
+        <if test="timeRange == 'month'">
+            AND month_str = #{monthStr}
+        </if>
+        <if test="timeRange == 'year'">
+            AND year_str = #{yearStr}
+        </if>
+        <if test="timeRange == 'quarter'">
+            AND quarter_str = #{quarterStr}
+        </if>
+
+        <if test="timeRange == 'halfYear'">
+            AND half_year_str = #{halfYearStr}
+        </if>
+    </select>
+    <update id="setReCreateTrueByTimeRangeAndDateStr" parameterType="SnapshootEntity">
+        update snapshoot set recreate=true where time_range=#{timeRange}
+
+        <if test="timeRange == 'day'">
+            AND day_str = #{dayStr}
+        </if>
+        <if test="timeRange == 'month'">
+            AND month_str = #{monthStr}
+        </if>
+        <if test="timeRange == 'year'">
+            AND year_str = #{yearStr}
+        </if>
+        <if test="timeRange == 'quarter'">
+            AND quarter_str = #{quarterStr}
+        </if>
+
+        <if test="timeRange == 'halfYear'">
+            AND half_year_str = #{halfYearStr}
+        </if>
+    </update>
+    <select id="findSnapshootByMonthAvg" parameterType="DateRangeStrDto" resultType="OrderTrendMonthResultDto">
+        SELECT
+        *
+        FROM
+        snapshoot
+        WHERE type=#{date} AND time_range=#{timeRange} AND
+        month_str <![CDATA[ >= ]]> #{startDateStr} AND
+        month_str <![CDATA[ <= ]]> #{endDateStr}
+        ORDER BY month_str ASC
+    </select>
+    <select id="countSnapshotByTimeRangeAndDateRange" parameterType="SnapRecreateDto" resultType="Long">
+        SELECT COUNT(*) FROM snapshoot WHERE time_range=#{timeRange}
+
+        <if test="timeRange == 'day'">
+            AND
+            day_str <![CDATA[ >= ]]> #{startDate} AND
+            day_str <![CDATA[ < ]]> #{endDate}
+        </if>
+        <if test="timeRange == 'month'">
+            AND
+            month_str <![CDATA[ >= ]]> #{startDate} AND
+            month_str <![CDATA[ < ]]> #{endDate}
+        </if>
+        <if test="timeRange == 'year' and startDate==endDate">
+            AND year_str = #{yearStr}
+        </if>
+        <if test="timeRange == 'year' and startDate!=endDate">
+            AND
+            year_str <![CDATA[ >= ]]> #{startDate} AND
+            year_str <![CDATA[ < ]]> #{endDate}
+        </if>
+        <if test="timeRange == 'quarter'">
+            AND quarter_str = #{quarterStr}
+        </if>
+
+        <if test="timeRange == 'halfYear' and startDate==endDate">
+            AND half_year_str = #{startDate}
+        </if>
+        <if test="timeRange == 'halfYear' and startDate!=endDate">
+            AND
+            half_year_str <![CDATA[ >= ]]> #{startDate} AND
+            half_year_str <![CDATA[ < ]]> #{endDate}
+        </if>
+    </select>
+    <update id="setReCreateTrueByTimeRangeAndDateRange" parameterType="SnapRecreateDto">
+        update snapshoot set recreate=true where time_range=#{timeRange}
+
+        <if test="timeRange == 'day'">
+            AND
+            day_str <![CDATA[ >= ]]> #{startDate} AND
+            day_str <![CDATA[ < ]]> #{endDate}
+        </if>
+        <if test="timeRange == 'month'">
+            AND
+            month_str <![CDATA[ >= ]]> #{startDate} AND
+            month_str <![CDATA[ < ]]> #{endDate}
+        </if>
+        <if test="timeRange == 'year' and startDate==endDate">
+            AND year_str = #{yearStr}
+        </if>
+        <if test="timeRange == 'year' and startDate!=endDate">
+            AND
+            year_str <![CDATA[ >= ]]> #{startDate} AND
+            year_str <![CDATA[ < ]]> #{endDate}
+        </if>
+        <if test="timeRange == 'quarter'">
+            AND quarter_str = #{quarterStr}
+        </if>
+
+        <if test="timeRange == 'halfYear' and startDate==endDate">
+            AND half_year_str = #{startDate}
+        </if>
+        <if test="timeRange == 'halfYear' and startDate!=endDate">
+            AND
+            half_year_str <![CDATA[ >= ]]> #{startDate} AND
+            half_year_str <![CDATA[ < ]]> #{endDate}
+        </if>
+    </update>
+</mapper>

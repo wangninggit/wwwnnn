@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.CityMapper">
+    <insert id="addCity" parameterType="CityEntity">
+        INSERT INTO city
+        (city_id, city_name, update_time, create_time)
+        VALUES
+        (#{cityId},#{cityName},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+    <update id="updateCityById" parameterType="CityEntity">
+        UPDATE city set
+        city_name = #{cityName}, update_time=unix_timestamp(now())*1000
+        WHERE
+        city_id = #{cityId}
+    </update>
+    <select id="findCityById" parameterType="String" resultType="CityEntity">
+        SELECT * FROM city WHERE city_id=#{cityId}
+    </select>
+</mapper>

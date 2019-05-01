@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.user.mapper.IntegralCoefficientMapper">
+
+    <insert id="addIntegralCoefficient" parameterType="IntegralCoefficientParamDto">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+        INSERT INTO integral_coefficient
+        (start_date, end_date,integral_ration,dcw_ration,update_time,create_time)
+        values
+        (#{startDate}, #{endDate},#{integralRation},#{dcwRation},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+
+    <select id="findIntegralCoefficientByOrderTime" parameterType="Long" resultType="IntegralCoefficientEntity">
+       SELECT
+       *
+       FROM integral_coefficient
+       WHERE
+           start_date <![CDATA[ <= ]]> #{orderTime} AND
+           end_date <![CDATA[ > ]]> #{orderTime}
+       ORDER BY update_time DESC limit 1
+    </select>
+
+    <select id="findIntegralCoefficientById" parameterType="Long" resultType="IntegralCoefficientEntity">
+       SELECT
+          *
+       FROM integral_coefficient
+       WHERE
+          id = #{id}
+    </select>
+
+    <select id="findIntegralCoefficientList" resultType="IntegralCoefficientEntity">
+       SELECT
+        *
+       FROM integral_coefficient
+    </select>
+
+    <update id="updateIntegralCoefficientById" parameterType="IntegralCoefficientParamDto">
+        UPDATE
+          integral_coefficient
+        SET
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="integralRation != null">integral_ration = #{integralRation},</if>
+            <if test="dcwRation != null">dcw_ration = #{dcwRation},</if>
+            update_time=unix_timestamp(now())*1000
+        WHERE
+          id =#{id}
+    </update>
+
+</mapper>

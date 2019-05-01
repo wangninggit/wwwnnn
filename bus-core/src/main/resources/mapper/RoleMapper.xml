@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.user.mapper.RoleMapper">
+    <sql id="base_where">
+        <if test="name != null  and name != ''">
+            and name LIKE concat("%", #{name}, "%")
+        </if>
+        <if test="label != null and label != ''">
+            and label LIKE concat("%", #{label}, "%")
+        </if>
+    </sql>
+
+    <insert id="addRole" parameterType="RoleEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+        INSERT INTO role
+        (name, label,update_time,create_time)
+        values
+        (#{name}, #{label},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+
+    <delete id="deleteRoleById" parameterType="Long">
+        DELETE FROM
+            role
+        WHERE
+            id=#{id}
+    </delete>
+
+    <update id="updateRole" parameterType="RoleEntity">
+        UPDATE
+        role
+        SET
+        <if test="name != null">name = #{name},</if>
+        <if test="label != null">label = #{label},</if>
+        update_time=unix_timestamp(now())*1000, create_time=unix_timestamp(now())*1000
+        WHERE
+        id =#{id}
+    </update>
+
+    <select id="findRoleById" parameterType="Long" resultType="RoleEntity">
+       SELECT
+       *
+       FROM role WHERE id=#{id}
+    </select>
+
+    <select id="findRoleByPage" parameterType="RoleEntity" resultType="RoleEntity">
+        select
+         *
+        from role
+        WHERE 1=1
+        <include refid="base_where" />
+        ORDER BY id DESC
+    </select>
+
+    <select id="findRoles" resultType="RoleEntity">
+        select
+        *
+        from role
+    </select>
+
+</mapper>

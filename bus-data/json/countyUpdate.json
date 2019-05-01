@@ -1,0 +1,10 @@
+{
+  "id": 17,
+  "tag": "system",
+  "event": "countyUpdate",
+  "eventTime": 1528799739000,
+  "data": {
+    "countyId": "3",
+    "countyName": "肥城1"
+  }
+}

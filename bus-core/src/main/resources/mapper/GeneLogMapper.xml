@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.log.mapper.GeneLogMapper">
+    <insert id="addLog" parameterType="GeneLogEntity">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+        INSERT INTO gene_log
+        (tag,event,event_time,message_id,record_id,day_str,month_str,year_str,quarter_str,half_year_str,record,order_id,update_time,create_time)
+        VALUES
+        (#{tag},#{event},#{eventTime},#{messageId},#{recordId},#{dayStr},#{monthStr},#{yearStr},#{quarterStr},#{halfYearStr},#{record},#{orderId},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+    <select id="findByRecordId" parameterType="Long" resultType="GeneLogEntity">
+        SELECT * FROM gene_log WHERE record_id = #{recordId}
+    </select>
+    <select id="countByRecordId" parameterType="Long" resultType="Long">
+        SELECT COUNT(*) as count FROM gene_log WHERE record_id = #{id}
+    </select>
+</mapper>

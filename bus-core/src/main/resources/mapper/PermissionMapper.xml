@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.user.mapper.PermissionMapper">
+    <insert id="addPermission" parameterType="PermissionEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+       INSERT INTO permission
+        (page_id, name, label, type, url, parent, sort, update_time, create_time)
+        values
+        (#{pageId}, #{name}, #{label},#{type},#{url},#{parent},#{sort},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+    <update id="updatePermissionById" parameterType="PermissionEntity">
+        UPDATE
+        permission
+        SET
+        page_id=#{pageId}, name=#{name}, label=#{label}, type=#{type}, url=#{url}, parent=#{parent}, sort=#{sort}, update_time=unix_timestamp(now())*1000, create_time=unix_timestamp(now())*1000
+        WHERE
+        id=#{id}
+    </update>
+    <select id="findPermissionById" parameterType="Long" resultType="PermissionEntity">
+      SELECT * FROM permission WHERE id=#{id}
+    </select>
+    <delete id="deletePermissionById" parameterType="Long">
+      DELETE FROM permission WHERE id=#{id}
+    </delete>
+    <select id="findPermissionByPage" resultType="PermissionEntity">
+      SELECT * FROM permission ORDER BY id ASC
+    </select>
+    <delete id="deletePermissionByPageId" parameterType="Long">
+      DELETE FROM permission WHERE page_id=#{id}
+    </delete>
+
+    <resultMap id="PermissionsGroupByPageResultMap" type="PermissionsGroupByPageEntity">
+        <id column="page_id" property="id" />
+        <result column="page_name" property="name"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+        <collection property="permissionList" ofType="PermissionEntity">
+            <id column="permission_id" property="id"/>
+            <result column="label" property="label"/>
+            <result column="type" property="type"/>
+            <result column="url" property="url"/>
+            <result column="parent" property="parent"/>
+            <result column="sort" property="sort"/>
+            <result column="update_time" property="updateTime"/>
+            <result column="create_time" property="createTime"/>
+        </collection>
+    </resultMap>
+    <select id="findPermissionsGroupByPage" resultMap="PermissionsGroupByPageResultMap">
+        SELECT
+            permission.page_id,
+            page.name page_name,
+            page.update_time,
+            page.create_time,
+            permission.id permission_id,
+            permission.label,
+            permission.type,
+            permission.url,
+            permission.parent,
+            permission.sort,
+            permission.update_time,
+            permission.create_time
+        from page,permission
+        where page.id = permission.page_id
+    </select>
+
+    <select id="findAllPermissions" resultType="PermissionEntity">
+        SELECT * FROM permission
+    </select>
+    <select id="findPermissionByPageNameAndType" parameterType="PermissionTypeDto" resultType="PermissionEntity">
+        select
+          permission.id id
+        from permission
+        LEFT JOIN page ON permission.page_id = page.id
+        WHERE page.name= #{pageName} AND permission.type=#{type}
+    </select>
+</mapper>

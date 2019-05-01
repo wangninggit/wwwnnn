@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.InvoiceMapper">
+    <insert id="addInvoice" parameterType="InvoiceEntity">
+        INSERT INTO invoice
+        (invoice_code,invoice_number,invoice_goods_code_version,invoice_tax_classification_code,
+        invoice_time,invoice_date,invoice_buyer_name,invoice_buyer_tax_payer_number,invoice_buyer_address,
+        invoice_buyer_bank,invoice_item_name,invoice_item_count,invoice_item_unit_price,invoice_post_tax_amount,
+        invoice_tax_rate,invoice_tax_amount,invoice_amount,invoice_seller_name,invoice_seller_tax_payer_number,
+        invoice_seller_address,invoice_seller_bank,update_time,create_time
+        )
+        VALUES
+        (#{invoiceCode},#{invoiceNumber},#{invoiceGoodsCodeVersion},#{invoiceTaxClassificationCode},
+        #{invoiceTime},#{invoiceDate},#{invoiceBuyerName},#{invoiceBuyerTaxPayerNumber},#{invoiceBuyerAddress},
+        #{invoiceBuyerBank},#{invoiceItemName},#{invoiceItemCount},#{invoiceItemUnitPrice},#{invoicePostTaxAmount},
+        #{invoiceTaxRate},#{invoiceTaxAmount},#{invoiceAmount},#{invoiceSellerName},#{invoiceSellerTaxPayerNumber},
+        #{invoiceSellerAddress},#{invoiceSellerBank},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+    <delete id="removeInvoiceByCode" parameterType="String">
+        UPDATE
+        invoice
+        SET
+        deleted = true
+        WHERE
+        invoice_code=#{code}
+    </delete>
+    <select id="findInvoiceByCode" parameterType="String" resultType="InvoiceEntity">
+        select * from invoice where invoice_code=#{code}
+    </select>
+    <update id="updateInvoiceByCode" parameterType="InvoiceEntity">
+        UPDATE invoice set
+        invoice_code = #{invoiceCode},
+        invoice_number = #{invoiceNumber},
+        invoice_goods_code_version = #{invoiceGoodsCodeVersion},
+        invoice_tax_classification_code = #{invoiceTaxClassificationCode},
+        invoice_time = #{invoiceTime},
+        invoice_date = #{invoiceDate},
+        invoice_buyer_name = #{invoiceBuyerName},
+        invoice_buyer_tax_payer_number = #{invoiceBuyerTaxPayerNumber},
+        invoice_buyer_address = #{invoiceBuyerAddress},
+        invoice_buyer_bank = #{invoiceBuyerBank},
+        invoice_item_name = #{invoiceItemName},
+        invoice_item_count = #{invoiceItemCount},
+        invoice_item_unit_price = #{invoiceItemUnitPrice},
+        invoice_post_tax_amount = #{invoicePostTaxAmount},
+        invoice_tax_rate = #{invoiceTaxRate},
+        invoice_tax_amount = #{invoiceTaxAmount},
+        invoice_amount = #{invoiceAmount},
+        invoice_seller_name = #{invoiceSellerName},
+        invoice_seller_tax_payer_number = #{invoiceSellerTaxPayerNumber},
+        invoice_seller_address = #{invoiceSellerAddress},
+        invoice_seller_bank = #{invoiceSellerBank},
+        update_time=unix_timestamp(now())*1000
+        WHERE
+        invoice_code = #{invoiceCode}
+    </update>
+</mapper>

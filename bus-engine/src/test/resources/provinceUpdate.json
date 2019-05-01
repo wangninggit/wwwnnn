@@ -1,0 +1,10 @@
+{
+  "id": 15,
+  "tag": "system",
+  "event": "provinceUpdate",
+  "eventTime": 1528799674000,
+  "data": {
+    "provinceId": "1",
+    "provinceName": "山东1"
+  }
+}

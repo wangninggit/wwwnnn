@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.user.mapper.RolePermissionMapper">
+
+    <delete id="deleteRolePermissionsByRoleId" parameterType="Long">
+        DELETE FROM role_permission
+        WHERE
+        role_id = #{value}
+    </delete>
+
+    <insert id="addRolePermissions" parameterType="RolePermissionUpdateEntity">
+        INSERT INTO role_permission
+        (role_id, permission_id, update_time, create_time)
+        VALUES
+        <foreach collection ="rolePermissionEntities" item="rolePermissionEntity" separator =",">
+            (#{rolePermissionEntity.roleId}, #{rolePermissionEntity.permissionId}, unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+        </foreach >
+    </insert>
+
+    <delete id="deleteRolePermissionsByPageId" parameterType="Long">
+        DELETE FROM role_permission
+        WHERE
+        permission_id IN
+        (
+          SELECT
+          id
+          from permission where
+          page_id = #{value}
+        )
+    </delete>
+
+    <select id="findPermissionIdsByRoleId" parameterType="Long" resultType="RolePermissionEntity">
+        SELECT * FROM role_permission WHERE role_id = #{value}
+    </select>
+
+    <select id="findPermissionsByRoleId" parameterType="Long" resultType="RolePermissionPageDto">
+        SELECT
+            role_permission.role_id role_id,
+            permission.id permission_id,
+            permission.type type,
+            page.id page_id,
+            page.`name` page_name,
+            page.label label,
+            page.description description
+        FROM
+        role_permission
+        LEFT JOIN permission ON role_permission.permission_id = permission.id
+        LEFT JOIN page ON permission.page_id = page.id
+        WHERE role_permission.role_id = #{role_id} AND page.id NOT IN('1','14','15','16','17')
+    </select>
+
+    <insert id="updateRolePermissions" parameterType="RolePermissionUpdateEntity">
+        INSERT INTO role_permission
+        (role_id, permission_id, update_time, create_time)
+        VALUES
+        <foreach collection ="ids" item="id" separator =",">
+            (#{roleId}, #{id}, unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+        </foreach >
+    </insert>
+    <select id="findPermissionsJoinPage" resultType="RolePermissionPageDto">
+        SELECT
+            permission.id permission_id,
+            permission.type type,
+            page.id page_id,
+            page.`name` page_name,
+            page.label label,
+            page.description description
+        FROM
+        permission
+        LEFT JOIN page ON permission.page_id = page.id
+        WHERE page.id NOT IN('1','14','15','16','17')
+    </select>
+
+    <select id="findPermissionsByRoleIds" parameterType="UserRoleMapDto" resultType="RolePermissionPageDto">
+        SELECT
+            DISTINCT permission.id permission_id,
+            permission.type type,
+            page.id page_id,
+            page.`name` page_name,
+            page.label label,
+            page.description description
+        FROM
+        role_permission
+        LEFT JOIN permission ON role_permission.permission_id = permission.id
+        LEFT JOIN page ON permission.page_id = page.id
+        WHERE page.id NOT IN('1','14','15','16','17') AND role_permission.role_id IN
+        <foreach collection="roles" item="role" separator="," open="(" close=")">
+            #{role.id}
+        </foreach>
+    </select>
+</mapper>

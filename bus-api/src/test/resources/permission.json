@@ -1,0 +1,373 @@
+[
+  {
+    "page": 1,
+    "name": "dashboard:dimension-count",
+    "label": "今日各维度数据",
+    "type": "dashboard:dimension-count",
+    "sort": 0
+  },
+  {
+    "page": 1,
+    "name": "dashboard:order-trend",
+    "label": "销售额趋势",
+    "type": "dashboard:order-trend",
+    "sort": 1
+  },
+  {
+    "page": 1,
+    "name": "dashboard:order-count-top",
+    "label": "大区订单量排行",
+    "type": "dashboard:order-count-top",
+    "sort": 2
+  },
+  {
+    "page": 1,
+    "name": "dashboard:order-count-top",
+    "label": "省份业务明细",
+    "type": "dashboard:order-count-top",
+    "sort": 3
+  },
+  {
+    "page": 2,
+    "name": "query:business-detail",
+    "label": "基因检测业务-业务明细查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 2,
+    "name": "query:business-detail-export",
+    "label": "基因检测业务-业务明细查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 3,
+    "name": "query:daily-detail",
+    "label": "基因检测业务-日统计查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 3,
+    "name": "query:daily-detail-export",
+    "label": "基因检测业务-日统计查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 4,
+    "name": "query:region-contrast",
+    "label": "基因检测业务-业务明细对比-大区对比查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 4,
+    "name": "query:region-contrast-export",
+    "label": "基因检测业务-业务明细对比-大区对比查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 5,
+    "name": "query:province-contrast",
+    "label": "基因检测业务-业务明细对比-省份对比查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 5,
+    "name": "query:province-contrast-export",
+    "label": "基因检测业务-业务明细对比-省份对比查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 6,
+    "name": "query:testing-item-contrast",
+    "label": "基因检测业务-业务明细对比-检测项目对比查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 6,
+    "name": "query:testing-item-contrast-export",
+    "label": "基因检测业务-业务明细对比-检测项目对比查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 7,
+    "name": "query:income-detail",
+    "label": "基因检测业务-收入明细查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 7,
+    "name": "query:income-detail-export",
+    "label": "基因检测业务-收入明细查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 8,
+    "name": "report:business-detail",
+    "label": "基因检测业务-业务明细查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 8,
+    "name": "report:business-detail-export",
+    "label": "基因检测业务-业务明细查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 9,
+    "name": "report:region-contrast",
+    "label": "基因检测业务-业务明细对比-大区对比查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 9,
+    "name": "report:region-contrast-export",
+    "label": "基因检测业务-业务明细对比-大区对比查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 10,
+    "name": "report:province-contrast",
+    "label": "基因检测业务-业务明细对比-省份对比查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 10,
+    "name": "report:province-contrast-export",
+    "label": "基因检测业务-业务明细对比-省份对比查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 11,
+    "name": "report:testing-item-contrast",
+    "label": "基因检测业务-业务明细对比-检测项目对比查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 11,
+    "name": "report:testing-item-contrast-export",
+    "label": "基因检测业务-业务明细对比-检测项目对比查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 12,
+    "name": "report:profits",
+    "label": "基因检测业务-利润查询",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 12,
+    "name": "report:profits-export",
+    "label": "基因检测业务-利润查询-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 13,
+    "name": "report:income-detail",
+    "label": "基因检测业务-收入明细",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 13,
+    "name": "report:income-detail-export",
+    "label": "基因检测业务-收入明细-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 14,
+    "name": "page:add",
+    "label": "新增页面",
+    "type": "add",
+    "sort": 0
+  },
+  {
+    "page": 14,
+    "name": "page:delete",
+    "label": "删除页面",
+    "type": "delete",
+    "sort": 1
+  },
+  {
+    "page": 14,
+    "name": "page:update",
+    "label": "更新页面",
+    "type": "update",
+    "sort": 2
+  },
+  {
+    "page": 14,
+    "name": "page:get",
+    "label": "获取页面详细信息",
+    "type": "get",
+    "sort": 3
+  },
+  {
+    "page": 14,
+    "name": "page:list",
+    "label": "获取页面列表",
+    "type": "list",
+    "sort": 4
+  },
+  {
+    "page": 15,
+    "name": "user:add",
+    "label": "用户管理-新增用户",
+    "type": "add",
+    "sort": 0
+  },
+  {
+    "page": 15,
+    "name": "user:delete",
+    "label": "用户管理-删除用户",
+    "type": "delete",
+    "sort": 1
+  },
+  {
+    "page": 15,
+    "name": "user:update",
+    "label": "用户管理-更新用户",
+    "type": "update",
+    "sort": 2
+  },
+  {
+    "page": 15,
+    "name": "user:get",
+    "label": "用户管理-获取用户详细信息",
+    "type": "get",
+    "sort": 3
+  },
+  {
+    "page": 15,
+    "name": "user:list",
+    "label": "用户管理-获取用户列表",
+    "type": "list",
+    "sort": 4
+  },
+  {
+    "page": 16,
+    "name": "role:add",
+    "label": "角色管理-新增角色",
+    "type": "add",
+    "sort": 0
+  },
+  {
+    "page": 16,
+    "name": "role:delete",
+    "label": "角色管理-删除角色",
+    "type": "delete",
+    "sort": 1
+  },
+  {
+    "page": 16,
+    "name": "role:update",
+    "label": "角色管理-更新角色",
+    "type": "update",
+    "sort": 2
+  },
+  {
+    "page": 16,
+    "name": "role:get",
+    "label": "角色管理-获取角色详细信息",
+    "type": "get",
+    "sort": 3
+  },
+  {
+    "page": 16,
+    "name": "role:list",
+    "label": "角色管理-获取角色列表",
+    "type": "list",
+    "sort": 4
+  },
+  {
+    "page": 17,
+    "name": "permission:add",
+    "label": "权限管理-新增权限",
+    "type": "add",
+    "sort": 0
+  },
+  {
+    "page": 17,
+    "name": "permission:delete",
+    "label": "权限管理-删除权限",
+    "type": "delete",
+    "sort": 1
+  },
+  {
+    "page": 17,
+    "name": "permission:update",
+    "label": "权限管理-更新权限",
+    "type": "update",
+    "sort": 2
+  },
+  {
+    "page": 17,
+    "name": "permission:get",
+    "label": "权限管理-获取权限详细信息",
+    "type": "get",
+    "sort": 3
+  },
+  {
+    "page": 17,
+    "name": "permission:list",
+    "label": "权限管理-获取权限列表",
+    "type": "list",
+    "sort": 4
+  },
+  {
+    "page": 18,
+    "name": "query:order-without-invoice",
+    "label": "基因检测业务-未开票明细表",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 18,
+    "name": "query:order-without-invoice-export",
+    "label": "基因检测业务-未开票明细表-导出Excel",
+    "type": "export",
+    "sort": 1
+  },
+  {
+    "page": 1,
+    "name": "dashboard:order-trend-month-avg",
+    "label": "月均销量趋势图",
+    "type": "dashboard:order-trend-month-avg",
+    "sort": 4
+  },
+  {
+    "page": 19,
+    "name": "query:order-trend-month-avg",
+    "label": "基因检测业务-月平均销量表",
+    "type": "query",
+    "sort": 0
+  },
+  {
+    "page": 19,
+    "name": "query:order-trend-month-avg-export",
+    "label": "基因检测业务-月平均销量表-导出Excel",
+    "type": "export",
+    "sort": 1
+  }
+]

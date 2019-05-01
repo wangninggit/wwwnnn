@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.kpi.mapper.KpiUploadMapper">
+    <insert id="addUploadExcel" parameterType="KpiUploadEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+        INSERT INTO kpi_upload
+        (original_file_name, storage_file_name, url, upload_time)
+        VALUES
+        (#{originalFileName},#{storageFileName},#{url},unix_timestamp(now())*1000)
+    </insert>
+
+    <select id="findRecordById" parameterType="Long" resultType="KpiUploadEntity">
+        select * from kpi_upload where id=#{value}
+    </select>
+</mapper>

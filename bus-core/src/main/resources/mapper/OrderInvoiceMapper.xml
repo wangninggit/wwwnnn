@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.OrderInvoiceMapper">
+
+    <insert id="addOrderInvoice" parameterType="OrderInvoiceEntity">
+        INSERT INTO order_invoice
+        (order_id, invoice_code,update_time, create_time)
+        VALUES
+            (#{orderId}, #{invoiceCode}, unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+
+    <insert id="addInvoiceOrders" parameterType="OrderInvoiceDto">
+        INSERT INTO order_invoice
+        (order_id, invoice_code,update_time, create_time)
+        VALUES
+        <foreach collection ="orderIds" item="item" separator =",">
+            (#{item}, #{invoiceCode}, unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+        </foreach >
+    </insert>
+
+    <delete id="deleteByInvoiceCode" parameterType="String">
+        DELETE FROM
+            order_invoice
+        WHERE
+            invoice_code=#{invoiceCode}
+    </delete>
+    <delete id="deleteByOrderId" parameterType="String">
+        UPDATE
+        order_invoice
+        SET
+        deleted = true
+        WHERE
+        order_id=#{orderId}
+    </delete>
+
+    <select id="findByInvoiceCode" parameterType="String" resultType="OrderInvoiceEntity">
+        SELECT *
+        FROM order_invoice
+        WHERE
+        invoice_code=#{invoiceCode}
+    </select>
+
+    <select id="findByOrderId" parameterType="String" resultType="OrderInvoiceEntity">
+        SELECT *
+        FROM order_invoice
+        WHERE
+        order_id=#{orderId}
+    </select>
+
+    <select id="findInvoiceDetailByOrderId" parameterType="String" resultType="InvoiceEntity">
+        SELECT invoice.* FROM
+          order_invoice
+        LEFT JOIN invoice
+        ON order_invoice.invoice_code = invoice.invoice_code
+        WHERE order_id = #{orderId}
+    </select>
+
+</mapper>

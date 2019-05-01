@@ -1,0 +1,10 @@
+{
+  "id": 18,
+  "tag": "system",
+  "event": "regionUpdate",
+  "eventTime": 1528799760000,
+  "data": {
+    "regionId": "1",
+    "regionName": "华北1"
+  }
+}

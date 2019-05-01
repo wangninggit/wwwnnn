@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.GeneDetailMapper">
+
+    <sql id="detailInsertFiledSql">
+        tag,
+        message_id,
+        record_id,
+        day_str,
+        month_str,
+        year_str,
+        quarter_str,
+        half_year_str,
+        event,
+        event_time,
+        order_income,
+        cash_income,
+        finance_confirm_income,
+        testing_item_cost,
+        testing_item_confirm_cost,
+        integral_cost,
+        dcw_integral_cost,
+        dcw_integral_raw_cost,
+        empiri_value,
+        integral,
+        dcw_integral,
+        dcw_integral_raw,
+        order_id,
+        order_number,
+        order_price,
+        order_creator_id,
+        order_creator_name,
+        order_create_time,
+        order_pay_time,
+        sample_confirm_time,
+        testing_report_upload_time,
+        integral_grant_time,
+        order_invoice_time,
+        order_cancel_time,
+        order_refund_time,
+        order_update_time,
+        patient_name,
+        patient_gender,
+        patient_id_card,
+        patient_age,
+        patient_address,
+        patient_clinical_diagnosis,
+        local_staff_id,
+        local_staff_job_number,
+        local_staff_name,
+        local_staff_region_id,
+        local_staff_region_name,
+        local_staff_province_id,
+        local_staff_province_name,
+        local_staff_city_id,
+        local_staff_city_name,
+        local_staff_county_id,
+        local_staff_county_name,
+        doctor_id,
+        doctor_name,
+        hospital_name,
+        hospital_address,
+        dcw_id,
+        order_place_cost,
+        order_place_count,
+        order_cancel_count,
+        order_cancel_cost,
+        update_time,
+        create_time
+    </sql>
+    <sql id="detailInsertValueSql">
+        #{tag},
+        #{messageId},
+        #{recordId},
+        #{dayStr},
+        #{monthStr},
+        #{yearStr},
+        #{quarterStr},
+        #{halfYearStr},
+        #{event},
+        #{eventTime},
+        #{orderIncome},
+        #{cashIncome},
+        #{financeConfirmIncome},
+        #{testingItemCost},
+        #{testingItemConfirmCost},
+        #{integralCost},
+        #{dcwIntegralCost},
+        #{dcwIntegralRawCost},
+        #{empiriValue},
+        #{integral},
+        #{dcwIntegral},
+        #{dcwIntegralRaw},
+        #{orderId},
+        #{orderNumber},
+        #{orderPrice},
+        #{orderCreatorId},
+        #{orderCreatorName},
+        #{orderCreateTime},
+        #{orderPayTime},
+        #{sampleConfirmTime},
+        #{testingReportUploadTime},
+        #{integralGrantTime},
+        #{orderInvoiceTime},
+        #{orderCancelTime},
+        #{orderRefundTime},
+        #{orderUpdateTime},
+        #{patientName},
+        #{patientGender},
+        #{patientIdCard},
+        #{patientAge},
+        #{patientAddress},
+        #{patientClinicalDiagnosis},
+        #{localStaffId},
+        #{localStaffJobNumber},
+        #{localStaffName},
+        #{localStaffRegionId},
+        #{localStaffRegionName},
+        #{localStaffProvinceId},
+        #{localStaffProvinceName},
+        #{localStaffCityId},
+        #{localStaffCityName},
+        #{localStaffCountyId},
+        #{localStaffCountyName},
+        #{doctorId},
+        #{doctorName},
+        #{hospitalName},
+        #{hospitalAddress},
+        #{dcwId},
+        #{orderPlaceCost},
+        #{orderPlaceCount},
+        #{orderCancelCount},
+        #{orderCancelCost},
+        unix_timestamp(now())*1000,
+        unix_timestamp(now())*1000
+    </sql>
+    <sql id="detailUpdateSql">
+        tag=#{tag},
+        message_id=#{messageId},
+        record_id=#{recordId},
+        day_str=#{dayStr},
+        month_str=#{monthStr},
+        year_str=#{yearStr},
+        quarter_str=#{quarterStr},
+        half_year_str=#{halfYearStr},
+        event =#{event},
+        event_time=#{eventTime},
+        change_count=change_count+1,
+        order_income=#{orderIncome},
+        cash_income=#{cashIncome},
+        finance_confirm_income=#{financeConfirmIncome},
+        testing_item_cost=#{testingItemCost},
+        testing_item_confirm_cost=#{testingItemConfirmCost},
+        integral_cost=#{integralCost},
+        integral=#{integral},
+        dcw_integral_cost=#{dcwIntegralCost},
+        dcw_integral=#{dcwIntegral},
+        dcw_integral_raw_cost=#{dcwIntegralRawCost},
+        empiri_value=#{empiriValue},
+        dcw_integral_raw=#{dcwIntegralRaw},
+        order_id=#{orderId},
+        order_number=#{orderNumber},
+        order_price=#{orderPrice},
+        order_creator_id=#{orderCreatorId},
+        order_creator_name=#{orderCreatorName},
+        order_create_time=#{orderCreateTime},
+        order_pay_time=#{orderPayTime},
+        sample_confirm_time=#{sampleConfirmTime},
+        testing_report_upload_time=#{testingReportUploadTime},
+        integral_grant_time=#{integralGrantTime},
+        order_invoice_time=#{orderInvoiceTime},
+        order_cancel_time=#{orderCancelTime},
+        order_refund_time=#{orderRefundTime},
+        order_update_time=#{orderUpdateTime},
+        patient_name=#{patientName},
+        patient_gender=#{patientGender},
+        patient_id_card=#{patientIdCard},
+        patient_age=#{patientAge},
+        patient_address=#{patientAddress},
+        patient_clinical_diagnosis=#{patientClinicalDiagnosis},
+        local_staff_id=#{localStaffId},
+        local_staff_job_number=#{localStaffJobNumber},
+        local_staff_name=#{localStaffName},
+        local_staff_region_id=#{localStaffRegionId},
+        local_staff_region_name=#{localStaffRegionName},
+        local_staff_province_id=#{localStaffProvinceId},
+        local_staff_province_name=#{localStaffProvinceName},
+        local_staff_city_id=#{localStaffCityId},
+        local_staff_city_name=#{localStaffCityName},
+        local_staff_county_id=#{localStaffCountyId},
+        local_staff_county_name=#{localStaffCountyName},
+        doctor_id=#{doctorId},
+        doctor_name=#{doctorName},
+        hospital_name=#{hospitalName},
+        hospital_address=#{hospitalAddress},
+        dcw_id=#{dcwId},
+        order_place_cost=#{orderPlaceCost},
+        order_place_count=#{orderPlaceCount},
+        order_cancel_count=#{orderCancelCount},
+        order_cancel_cost=#{orderCancelCost},
+        update_time=unix_timestamp(now())*1000
+    </sql>
+    <insert id="addGeneDetail" parameterType="GeneDetailBaseEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+        INSERT INTO gene_detail
+        (<include refid="detailInsertFiledSql"/>)
+        values
+        (<include refid="detailInsertValueSql"/>)
+    </insert>
+    <update id="updateGeneDetail" parameterType="GeneDetailBaseEntity">
+        UPDATE
+        gene_detail
+        SET
+        <include refid="detailUpdateSql"/>
+        WHERE
+        id=#{id}
+    </update>
+    <update id="updateGeneDetailByOrderId" parameterType="GeneDetailBaseEntity">
+        UPDATE
+        gene_detail
+        SET
+        <include refid="detailUpdateSql"/>
+        WHERE
+        order_id=#{orderId}
+    </update>
+    <select id="getGeneDetailByOrderId" parameterType="String" resultType="GeneDetailBaseEntity">
+        SELECT *
+        FROM gene_detail
+        WHERE order_id = #{orderId}
+    </select>
+    <select id="getGeneDetailById" parameterType="Long" resultType="GeneDetailBaseEntity">
+        SELECT *
+        FROM gene_detail
+        WHERE id = #{id}
+    </select>
+    <select id="getGeneDetailIncomeReportByPage" parameterType="DateRangeDto" resultType="IncomeOrderDto">
+        SELECT *
+        FROM gene_detail
+        WHERE finance_confirm_income > 0
+              AND order_create_time <![CDATA[ >= ]]> #{startDate} AND order_create_time <![CDATA[ < ]]> #{endDate}
+        ORDER BY order_create_time DESC
+    </select>
+
+    <select id="getIncomeDetailReport" parameterType="DateRangeDto" resultType="IncomeOrderDto">
+        SELECT *
+        FROM gene_detail
+        WHERE finance_confirm_income > 0
+        AND order_create_time <![CDATA[ >= ]]> #{startDate} AND order_create_time <![CDATA[ < ]]> #{endDate}
+    </select>
+
+    <resultMap id="OrderWithoutInvoiceResultMap" type="OrderWithoutInvoiceDto">
+        <id column="order_id" property="orderId"/>
+        <result column="order_create_time" property="orderCreateTime"/>
+        <result column="order_number" property="orderNumber"/>
+        <result column="cash_income" property="cashIncome"/>
+        <result column="patient_name" property="patientName"/>
+        <result column="order_pay_time" property="orderPayTime"/>
+        <collection property="testings" ofType="TestingItemEntity">
+            <id column="testing_item_id" property="testingItemId"/>
+            <result column="testing_item" property="testingItem"/>
+        </collection>
+    </resultMap>
+    <select id="getOrderWithoutInvoice" parameterType="OrderWithoutInvoiceForm"
+            resultMap="OrderWithoutInvoiceResultMap">
+        SELECT
+            d.*,
+            tb.testing_item_id,
+            tb.testing_item
+        FROM gene_detail d, testing_item_detail td, testing_item_tab tb
+        WHERE
+            d.order_id = td.order_id AND
+            td.testing_item_id = tb.testing_item_id AND
+            cash_income != 0 AND
+            finance_confirm_income = 0 AND
+            order_create_time <![CDATA[ >= ]]> #{startDate} AND
+            order_create_time <![CDATA[ < ]]> #{endDate}
+        ORDER BY order_create_time DESC
+    </select>
+    <select id="getOrderWithoutInvoiceByPage" parameterType="OrderWithoutInvoiceForm"
+            resultType="OrderWithoutInvoiceDto">
+        SELECT *
+        FROM gene_detail
+        WHERE
+            cash_income != finance_confirm_income AND
+            order_create_time <![CDATA[ >= ]]> #{startDate} AND
+            order_create_time <![CDATA[ < ]]> #{endDate}
+        ORDER BY order_create_time DESC
+    </select>
+</mapper>

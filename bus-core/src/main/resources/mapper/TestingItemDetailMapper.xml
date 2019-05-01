@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.TestingItemDetailMapper">
+
+    <sql id="detailInsertFiledSql">
+        (
+            tag,
+            message_id,
+            record_id,
+            day_str,
+            month_str,
+            year_str,
+            quarter_str,
+            half_year_str,
+            event,
+            event_time,
+            testing_item_order_income,
+            testing_item_cash_income,
+            testing_item_finance_confirm_income,
+            testing_item_record_cost,
+            testing_item_confirm_record_cost,
+            order_id,
+            testing_result,
+            testing_agency,
+            testing_item,
+            testing_item_id,
+            testing_item_price,
+            testing_item_cost,
+            testing_agency_id,
+            testing_agency_address,
+            testing_report_number,
+            testing_report_url,
+            order_create_time,
+            order_pay_time,
+            order_invoice_time,
+            order_cancel_time,
+            order_update_time,
+            testing_report_upload_time,
+            sampling_time,
+            sample_confirm_time,
+            testing_item_place_count,
+            testing_item_cancel_count,
+            update_time,
+            create_time
+        )
+    </sql>
+    <sql id="detailInsertValueSql">
+        (
+            #{tag},
+            #{messageId},
+            #{recordId},
+            #{dayStr},
+            #{monthStr},
+            #{yearStr},
+            #{quarterStr},
+            #{halfYearStr},
+            #{event},
+            #{eventTime},
+            #{testingItemOrderIncome},
+            #{testingItemCashIncome},
+            #{testingItemFinanceConfirmIncome},
+            #{testingItemRecordCost},
+            #{testingItemConfirmRecordCost},
+            #{orderId},
+            #{testingResult},
+            #{testingAgency},
+            #{testingItem},
+            #{testingItemId},
+            #{testingItemPrice},
+            #{testingItemCost},
+            #{testingAgencyId},
+            #{testingAgencyAddress},
+            #{testingReportNumber},
+            #{testingReportUrl},
+            #{orderCreateTime},
+            #{orderPayTime},
+            #{orderInvoiceTime},
+            #{orderCancelTime},
+            #{orderUpdateTime},
+            #{testingReportUploadTime},
+            #{samplingTime},
+            #{sampleConfirmTime},
+            #{testingItemPlaceCount},
+            #{testingItemCancelCount},
+            unix_timestamp(now())*1000,
+            unix_timestamp(now())*1000
+        )
+    </sql>
+    <sql id="detailUpdateSql">
+        tag=#{tag},
+        message_id=#{messageId},
+        record_id=#{recordId},
+        day_str=#{dayStr},
+        month_str=#{monthStr},
+        year_str=#{yearStr},
+        quarter_str=#{quarterStr},
+        half_year_str=#{halfYearStr},
+        event=#{event},
+        event_time=#{eventTime},
+        change_count=change_count+1,
+        testing_item_order_income=#{testingItemOrderIncome},
+        testing_item_cash_income=#{testingItemCashIncome},
+        testing_item_finance_confirm_income=#{testingItemFinanceConfirmIncome},
+        testing_item_record_cost=#{testingItemRecordCost},
+        testing_item_confirm_record_cost=#{testingItemConfirmRecordCost},
+        order_id = #{orderId},
+        testing_result = #{testingResult},
+        testing_agency = #{testingAgency},
+        testing_item = #{testingItem},
+        testing_item_id = #{testingItemId},
+        testing_item_price = #{testingItemPrice},
+        testing_item_cost = #{testingItemCost},
+        testing_agency_id = #{testingAgencyId},
+        testing_agency_address = #{testingAgencyAddress},
+        testing_report_number = #{testingReportNumber},
+        testing_report_url = #{testingReportUrl},
+        order_create_time=#{orderCreateTime},
+        order_pay_time=#{orderPayTime},
+        order_invoice_time=#{orderInvoiceTime},
+        order_cancel_time=#{orderCancelTime},
+        order_update_time=#{orderUpdateTime},
+        testing_report_upload_time = #{testingReportUploadTime},
+        sampling_time = #{samplingTime},
+        sample_confirm_time = #{sampleConfirmTime},
+        testing_item_place_count = #{testingItemPlaceCount},
+        testing_item_cancel_count = #{testingItemCancelCount},
+        update_time = unix_timestamp(now())*1000
+    </sql>
+
+    <insert id="addTestingItemDetail" parameterType="TestingItemDetailBaseEntity">
+        INSERT INTO testing_item_detail
+            <include refid="detailInsertFiledSql"/>
+        VALUES
+            <include refid="detailInsertValueSql"/>
+    </insert>
+
+    <select id="getTestingItemDetailsByOrderId" parameterType="String" resultType="TestingItemDetailBaseEntity">
+        SELECT * FROM testing_item_detail WHERE order_id=#{value}
+    </select>
+
+    <update id="updateTestingItemDetailByOrderIdAndTestingItemId" parameterType="TestingItemDetailBaseEntity">
+        UPDATE testing_item_detail SET
+            <include refid="detailUpdateSql"/>
+        WHERE
+            order_id = #{orderId} AND
+            testing_item_id = #{testingItemId}
+    </update>
+
+</mapper>

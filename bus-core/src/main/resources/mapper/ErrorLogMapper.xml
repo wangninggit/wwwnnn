@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.ErrorLogMapper">
+    <insert id="addErrorLog" parameterType="ErrorLogEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO error_log VALUES
+        (
+          null,
+          #{type},
+          #{error},
+          #{detail},
+          #{status},
+          unix_timestamp(now())*1000,
+          unix_timestamp(now())*1000
+        )
+    </insert>
+    <select id="findAllFieldCheckError" resultType="ErrorLogEntity">
+        select * from error_log where error='字段校验错误'
+    </select>
+</mapper>

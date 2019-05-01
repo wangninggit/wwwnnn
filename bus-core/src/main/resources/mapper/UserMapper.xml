@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.user.mapper.UserMapper">
+
+    <sql id="base_column">
+        id, phone_number, email, nickname, activate,update_time,create_time,deleted
+    </sql>
+
+    <sql id="base_where">
+        <if test="phoneNumber != null  and phoneNumber != ''">
+            and phone_number = #{phoneNumber}
+        </if>
+        <if test="email != null and email != ''">
+            and email LIKE concat("%", #{email}, "%")
+        </if>
+        <if test="nickname != null and nickname != ''">
+            and  nickname LIKE concat("%", #{nickname}, "%")
+        </if>
+        <if test="activate != null and activate != ''">
+            and activate = #{activate}
+        </if>
+    </sql>
+
+    <insert id="addUser" parameterType="UserEntity">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+        INSERT INTO user
+        (phone_number, email, nickname, password, salt,activate,update_time, create_time)
+        values
+        (#{phoneNumber}, #{email},
+        #{nickname},#{password},#{salt},#{activate},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+
+    <delete id="deleteUserById" parameterType="Long">
+        UPDATE
+            user
+        SET
+            deleted = true
+        WHERE
+            id=#{id}
+    </delete>
+
+    <update id="updateUser" parameterType="UserEntity">
+        UPDATE
+        user
+        SET
+        <if test="phoneNumber != null">phone_number = #{phoneNumber},</if>
+        <if test="activate != null">activate = #{activate},</if>
+        <if test="nickname != null">nickname = #{nickname},</if>
+        <if test="email != null">email = #{email},</if>
+        <if test="password != null">password = #{password},</if>
+        <if test="salt != null">salt = #{salt},</if>
+        update_time=unix_timestamp(now())*1000, create_time=unix_timestamp(now())*1000
+        WHERE
+        id =#{id}
+    </update>
+
+    <select id="findUserById" parameterType="Long" resultType="UserEntity">
+       SELECT
+       *
+       FROM user WHERE id=#{id}
+    </select>
+
+    <select id="findUserByPage" parameterType="UserRoleParamDto" resultType="UserRoleDto">
+        select
+        <include refid="base_column"/>
+        from user
+        WHERE 1=1 and deleted = false
+        <include refid="base_where"/>
+        ORDER BY id DESC
+    </select>
+    <select id="findByEmail" parameterType="String" resultType="UserEntity">
+       SELECT
+       *
+       FROM user WHERE email=#{email}
+    </select>
+    <resultMap id="userRolePermissionResultMap" type="UserRolePermissionDto">
+        <id column="id" property="id"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="email" property="email"/>
+        <result column="nickname" property="nickname"/>
+        <result column="activate" property="activate"/>
+        <result column="deleted" property="deleted"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+        <collection property="roles" ofType="RolePermissionDto">
+            <id column="roleId" property="id"/>
+            <result column="roleName" property="name"/>
+            <result column="roleLabel" property="label"/>
+            <result column="roleUCreateTime" property="createTime"/>
+            <result column="roleUpdateTime" property="updateTime"/>
+            <collection property="permissions" ofType="PermissionEntity">
+                <id column="permissionId" property="id"/>
+                <result column="permissionPageId" property="pageId"/>
+                <result column="permissionName" property="name"/>
+                <result column="permissionLabel" property="label"/>
+                <result column="permissionSort" property="sort"/>
+                <result column="permissionCreateTime" property="createTime"/>
+                <result column="permissionUpdateTime" property="updateTime"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="findUserRolePermissionById" parameterType="Long" resultMap="userRolePermissionResultMap">
+        SELECT
+            `user`.*,
+            permission.id permissionId,
+            permission.name permissionName,
+            permission.label permissionLabel,
+            permission.page_id permissionPageId,
+            permission.sort permissionSort,
+            permission.create_time permissionCreateTime,
+            permission.update_time permissionUpdateTime,
+            role.id roleId,
+            role.name roleName,
+            role.label roleLabel,
+            role.create_time roleCreateTime,
+            role.update_time roleUpdateTime
+        FROM
+          `user`
+        LEFT JOIN `user_role` ON `user`.id = `user_role`.user_id
+        LEFT JOIN `role` ON `role`.id = `user_role`.role_id
+        LEFT JOIN `role_permission` ON `role`.id = `role_permission`.role_id
+        LEFT JOIN `permission` ON `permission`.id = `role_permission`.permission_id
+        WHERE
+	    `user`.id = #{id}
+    </select>
+    <resultMap id="userRolePermissionMap" type="UserRoleMapDto">
+        <id column="id" property="id"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="email" property="email"/>
+        <result column="nickname" property="nickname"/>
+        <result column="activate" property="activate"/>
+        <result column="deleted" property="deleted"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+        <collection property="roles" ofType="RoleEntity">
+            <id column="roleId" property="id"/>
+            <result column="roleName" property="name"/>
+            <result column="roleLabel" property="label"/>
+            <result column="roleCreateTime" property="createTime"/>
+            <result column="roleUpdateTime" property="updateTime"/>
+        </collection>
+    </resultMap>
+    <select id="findUserRoleByUserId" parameterType="Long" resultMap="userRolePermissionMap">
+        SELECT
+            `user`.*,
+            role.id roleId,
+            role.name roleName,
+            role.label roleLabel,
+            role.create_time roleCreateTime,
+            role.update_time roleUpdateTime
+        FROM
+          `user`
+        LEFT JOIN `user_role` ON `user`.id = `user_role`.user_id
+        LEFT JOIN `role` ON `role`.id = `user_role`.role_id
+        WHERE
+	    `user`.id = #{id}
+    </select>
+    <select id="findUsersByPageJoinRole" parameterType="UserRoleForm" resultMap="userRolePermissionMap">
+        SELECT
+            `user`.*,
+            role.id roleId,
+            role.name roleName,
+            role.label roleLabel,
+            role.create_time roleCreateTime,
+            role.update_time roleUpdateTime
+        FROM
+          `user`
+        LEFT JOIN `user_role` ON `user`.id = `user_role`.user_id
+        LEFT JOIN `role` ON `role`.id = `user_role`.role_id
+        WHERE
+        `user`.id IN
+        <foreach collection="userIds" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="findUserByPageAngRoleName" parameterType="UserRoleParamDto" resultType="UserRoleDto">
+        SELECT
+        DISTINCT user.*
+        from user_role
+        LEFT JOIN role ON role.id = user_role.role_id
+        LEFT JOIN user on user_role.user_id = user.id
+        where role.label LIKE concat("%", #{roleName}, "%") and deleted = false
+        <include refid="base_where"/>
+        ORDER BY id DESC
+    </select>
+</mapper>

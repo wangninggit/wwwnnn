@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.LogisticsPayoutMapper">
+    <insert id="addLogisticsPayout" parameterType="LogisticsPayoutEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO logistics_payout
+        (tag,event,event_time,message_id,record_id,day_str,month_str,year_str,quarter_str,half_year_str,total,local_staff_id,local_staff_job_number,local_staff_name, local_staff_region_id,local_staff_region_name,local_staff_province_id,local_staff_province_name,local_staff_city_id,local_staff_city_name,local_staff_county_id,local_staff_county_name,update_time, create_time)
+        VALUES
+        (#{tag},#{event},#{eventTime},#{messageId},#{recordId},#{dayStr},#{monthStr},#{yearStr},#{quarterStr},#{halfYearStr},#{total},#{localStaffId},#{localStaffJobNumber},#{localStaffName},#{localStaffRegionId},#{localStaffRegionName},#{localStaffProvinceId},#{localStaffProvinceName},#{localStaffCityId},#{localStaffCityName},#{localStaffCountyId},#{localStaffCountyName},unix_timestamp(now())*1000,unix_timestamp(now())*1000)
+    </insert>
+    <update id="updateLogisticsPayout" parameterType="LogisticsPayoutEntity">
+        UPDATE logistics_payout set
+        tag = #{tag},
+        event = #{event},
+        event_time = #{eventTime},
+        message_id = #{messageId},
+        record_id = #{recordId},
+        day_str = #{dayStr},
+        month_str = #{monthStr},
+        year_str = #{yearStr},
+        quarter_str = #{quarterStr},
+        half_year_str = #{halfYearStr},
+        total = #{total},
+        local_staff_id = #{localStaffId},
+        local_staff_job_number = #{localStaffJobNumber},
+        local_staff_name = #{localStaffName},
+        local_staff_region_id = #{localStaffRegionId},
+        local_staff_region_name = #{localStaffRegionName},
+        local_staff_province_id = #{localStaffProvinceId},
+        local_staff_province_name = #{localStaffProvinceName},
+        local_staff_city_id = #{localStaffCityId},
+        local_staff_city_name = #{localStaffCityName},
+        local_staff_county_id = #{localStaffCountyId},
+        local_staff_county_name = #{localStaffCountyName},
+        update_time=unix_timestamp(now())*1000
+        WHERE
+        id = #{id}
+    </update>
+
+    <select id="findLogisticsPayoutById" parameterType="Long" resultType="LogisticsPayoutEntity">
+        SELECT * FROM logistics_payout WHERE id = #{id}
+    </select>
+
+</mapper>

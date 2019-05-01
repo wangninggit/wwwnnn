@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper">
+    <sql id="selectGroupFeildSql">
+        SUM(IFNULL(order_income,0)) order_income,
+		SUM(IFNULL(cash_income,0)) cash_income,
+		SUM(IFNULL(finance_confirm_income,0)) finance_confirm_income,
+		SUM(IFNULL(testing_item_cost,0)) testing_item_cost,
+		SUM(IFNULL(testing_item_confirm_cost,0)) testing_item_confirm_cost,
+		SUM(IFNULL(empiri_value,0)) integral_cost,
+		SUM(IFNULL(order_place_count,0)) order_place_count,
+		SUM(IFNULL(order_cancel_count,0)) order_cancel_count,
+		ROUND(IFNULL(SUM(IFNULL(order_place_cost,0))/SUM(IFNULL(order_place_count,0)),0)) order_place_avg_cost,
+		ROUND(IFNULL(SUM(IFNULL(order_cancel_cost,0))/SUM(IFNULL(order_cancel_count,0)),0)) order_cancel_avg_cost
+    </sql>
+    <sql id="incomeSumFieldSql">
+        sum(IFNULL(order_income,0)) order_income,
+        sum(IFNULL(cash_income,0)) cash_income,
+        sum(IFNULL(finance_confirm_income,0)) finance_confirm_income
+    </sql>
+    <insert id="addGeneDailyDetail" parameterType="GeneDetailBaseEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+       INSERT INTO gene_daily_detail
+        (<include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailInsertFiledSql" />)
+        values
+        (<include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailInsertValueSql" />)
+    </insert>
+    <update id="updateGeneDailyDetail" parameterType="GeneDetailBaseEntity">
+        UPDATE
+            gene_daily_detail
+        SET
+            <include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailUpdateSql" />
+        WHERE
+          id=#{id}
+    </update>
+    <update id="updateGeneDailyDetailByDayStrAndOrderId" parameterType="GeneDetailBaseEntity">
+        UPDATE
+            gene_daily_detail
+        SET
+            <include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailUpdateSql" />
+        WHERE
+          order_id=#{orderId} AND day_str=#{dayStr}
+    </update>
+    <select id="getGeneDailyDetailByOrderId" parameterType="String" resultType="GeneDetailBaseEntity">
+      SELECT * FROM gene_daily_detail WHERE order_id=#{orderId}
+    </select>
+    <select id="getGeneDailyDetailByOrderIdAndDailyStr" parameterType="GeneDetailBaseEntity" resultType="GeneDetailBaseEntity">
+      SELECT * FROM gene_daily_detail WHERE order_id=#{orderId} AND day_str=#{dayStr}
+    </select>
+    <select id="getGeneDailyDetailById" parameterType="Long" resultType="GeneDetailBaseEntity">
+      SELECT * FROM gene_daily_detail WHERE id=#{id}
+    </select>
+
+    <select id="getDailyDetailReportByDayStr" parameterType="String" resultType="DetailResultDto">
+      SELECT * FROM gene_daily_detail WHERE day_str = #{dayStr}
+    </select>
+
+    <select id="countDailyDetailReportByDayStr" parameterType="String" resultType="BusinessDetailResult">
+      SELECT
+        <include refid="selectGroupFeildSql"/>
+      FROM gene_daily_detail
+      WHERE day_str = #{dayStr}
+    </select>
+
+    <select id="getMonthDetailReportGroupByDayStr" parameterType="String" resultType="BusinessDetailResult">
+      SELECT
+        day_str date_str,
+        <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+      FROM gene_daily_detail
+      WHERE month_str = #{monthStr}
+      GROUP BY day_str
+    </select>
+    <select id="countMonthDetailReportByMonthStr" parameterType="String" resultType="BusinessDetailResult">
+        SELECT
+            <include refid="selectGroupFeildSql"/>
+        FROM gene_daily_detail
+        WHERE month_str = #{monthStr}
+    </select>
+    <select id="getSnapshootRecordByDailyStrAndGroupByRegionId" parameterType="String" resultType="RegionSnapshootRecordDto">
+        select
+            region_id,
+            region_name,
+            <include refid="selectGroupFeildSql"/>
+        from region
+        LEFT JOIN gene_daily_detail ON
+            local_staff_region_id = region_id AND
+            day_str=#{value}
+        GROUP BY
+            region_id
+    </select>
+    <select id="getSnapshootRecordByDailyStrAndGroupByProvinceId" parameterType="String" resultType="ProvinceSnapshootRecordDto">
+        select
+            province_id,
+            province_name,
+        <include refid="selectGroupFeildSql"/>
+        from province
+        LEFT JOIN gene_daily_detail ON
+            local_staff_province_id = province_id AND
+            day_str=#{value}
+        GROUP BY
+            province_id
+    </select>
+    <select id="getSnapshootRecordByDailyRangeAndRegionIdsAndGroupByRegionId" parameterType="QueryRegionContrastParamDto" resultType="RegionSnapshootRecordDto">
+        select
+            region.region_id region_id,
+            region.region_name region_name,
+            <include refid="selectGroupFeildSql"/>
+        from region
+        LEFT JOIN province ON
+            province.region_id = region.region_id
+        LEFT JOIN gene_daily_detail ON
+            local_staff_province_id = province.province_id AND
+            event_time <![CDATA[ >= ]]> #{startDate} AND
+            event_time <![CDATA[ < ]]> #{endDate}
+        GROUP BY
+            region_id
+
+        <if test="regionIds != null  and regionIds != '' and regionIds.length > 0">
+            HAVING
+            region_id IN
+            <foreach collection="regionIds" item="regionId" separator="," open="(" close=")">
+                #{regionId}
+            </foreach>
+        </if>
+
+    </select>
+    <select id="getOrderCountByDateDimensionGroupByRegionId" parameterType="QueryRegionContrastParamDto" resultType="OrderCountRankDto">
+        select
+            region.region_id region_id,
+            region.region_name title,
+            SUM(IFNULL(order_place_count,0)) total
+        from region
+        LEFT JOIN province ON
+            province.region_id = region.region_id
+        LEFT JOIN gene_daily_detail ON
+            local_staff_province_id = province.province_id AND
+            event_time <![CDATA[ >= ]]> #{startDate} AND
+            event_time <![CDATA[ < ]]> #{endDate}
+        GROUP BY
+            region_id
+        ORDER BY total DESC
+    </select>
+    <select id="queryDailyDetail" parameterType="DetailCountForm" resultType="BusinessDetailResult">
+      SELECT
+        day_str date_str,
+        <include refid="selectGroupFeildSql"/>
+      FROM gene_daily_detail,province,region
+      WHERE
+        gene_daily_detail.local_staff_province_id = province.province_id AND province.region_id = region.region_id
+        AND event_time <![CDATA[ >= ]]> #{startDate}  AND event_time <![CDATA[ < ]]> #{endDate}
+        <if test="regionId != null  and regionId != 'all' and regionId != ''">
+            AND local_staff_region_id = #{regionId}
+        </if>
+        <if test="localStaffName != null  and localStaffName != ''">
+            AND local_staff_name LIKE concat("%", #{localStaffName}, "%")
+        </if>
+        GROUP BY day_str
+    </select>
+    <select id="queryDailyDetailCount" parameterType="DetailCountForm" resultType="BusinessDetailResult">
+        SELECT
+            <include refid="selectGroupFeildSql"/>
+        FROM gene_daily_detail,province,region
+        WHERE
+        gene_daily_detail.local_staff_province_id = province.province_id AND province.region_id = region.region_id
+        AND event_time <![CDATA[ >= ]]> #{startDate}  AND event_time <![CDATA[ < ]]> #{endDate}
+        <if test="regionId != null  and regionId != 'all' and regionId != ''">
+            AND local_staff_region_id = #{regionId}
+        </if>
+        <if test="localStaffName != null  and localStaffName != ''">
+            AND local_staff_name LIKE concat("%", #{localStaffName}, "%")
+        </if>
+    </select>
+    <select id="getDailyDetailList" parameterType="DetailQueryForm" resultType="DetailResultDto">
+        SELECT
+        id,order_id,order_number,change_count,order_income,cash_income,finance_confirm_income,
+        testing_item_cost,testing_item_confirm_cost,empiri_value integral_cost,patient_name,patient_age,patient_gender,patient_id_card,
+        local_staff_name,local_staff_id, r.region_name as local_staff_region_name,p.region_id as local_staff_region_id,
+        doctor_name,hospital_name,doctor_id
+        FROM gene_daily_detail d, province p,region r
+        WHERE
+        d.local_staff_province_id=p.province_id AND r.region_id=p.region_id
+        AND event_time <![CDATA[ >= ]]> #{startDate}  AND event_time <![CDATA[ < ]]> #{endDate}
+        <if test="regionId != null  and regionId != 'all' and regionId != ''">
+            AND r.region_id = #{regionId}
+        </if>
+        <if test="localStaffName != '' and localStaffName != null">
+            AND d.local_staff_name LIKE concat("%", #{localStaffName}, "%")
+        </if>
+    </select>
+    <select id="getDailyDetailExcelList" parameterType="DetailCountForm" resultType="DetailResultDto">
+        SELECT
+        id,order_id,order_number,change_count,order_income,cash_income,finance_confirm_income,
+        testing_item_cost,testing_item_confirm_cost,(integral_cost + dcw_integral_cost) integral_cost,patient_name,patient_age,patient_gender,patient_id_card,
+        local_staff_name,local_staff_id, r.region_name as local_staff_region_name,p.region_id as local_staff_region_id,
+        doctor_name,hospital_name,doctor_id
+        FROM gene_daily_detail d, province p,region r
+        WHERE
+        d.local_staff_province_id=p.province_id AND r.region_id=p.region_id
+        AND event_time <![CDATA[ >= ]]> #{startDate}  AND event_time <![CDATA[ < ]]> #{endDate}
+        <if test="regionId != null  and regionId != 'all' and regionId != ''">
+            AND r.region_id = #{regionId}
+        </if>
+        <if test="localStaffName != '' and localStaffName != null">
+            AND d.local_staff_name LIKE concat("%", #{localStaffName}, "%")
+        </if>
+    </select>
+    <select id="queryBusinessProvince" parameterType="ProvinceQueryForm" resultType="ProvinceSnapshootRecordDto">
+        select
+            province_id,
+            province_name,
+            <include refid="selectGroupFeildSql"/>
+        from province
+        LEFT JOIN gene_daily_detail ON
+            local_staff_province_id = province_id AND
+            event_time <![CDATA[ >= ]]> #{startDate} AND
+            event_time <![CDATA[ < ]]> #{endDate}
+        GROUP BY
+            province_id
+        <if test="provinceIds != null  and provinceIds != '' and provinceIds.length > 0">
+            HAVING
+            province_id IN
+            <foreach collection="provinceIds" item="provinceId" separator="," open="(" close=")">
+                #{provinceId}
+            </foreach>
+        </if>
+
+    </select>
+    <select id="queryBusinessProvinceWeek" parameterType="DateRangeStrDto" resultType="ProvinceSnapshootRecordDto">
+        SELECT
+        province_id,
+        province.province_name province_name,
+        <include refid="incomeSumFieldSql"/>
+        FROM
+        province
+        LEFT JOIN gene_daily_detail
+        ON
+        gene_daily_detail.local_staff_province_id = province.province_id
+        AND day_str <![CDATA[ >= ]]> #{startDateStr} AND
+        day_str <![CDATA[ < ]]> #{endDateStr}
+        GROUP BY
+        province_id
+    </select>
+    <select id="queryBusinessProvinceYear" parameterType="String" resultType="ProvinceSnapshootRecordDto">
+        SELECT
+        province_id,
+        province.province_name province_name,
+        <include refid="incomeSumFieldSql"/>
+        FROM
+        province
+        LEFT JOIN gene_daily_detail
+        ON
+        gene_daily_detail.local_staff_province_id = province.province_id
+        AND year_str=#{yearStr}
+        GROUP BY
+        province_id
+    </select>
+    <select id="queryBusinessProvinceMonth" parameterType="String" resultType="ProvinceSnapshootRecordDto">
+        SELECT
+        province_id,
+        province.province_name province_name,
+        <include refid="incomeSumFieldSql"/>
+        FROM
+        province
+        LEFT JOIN gene_daily_detail
+        ON
+        gene_daily_detail.local_staff_province_id = province.province_id
+        AND month_str=#{monthStr}
+        GROUP BY
+        province_id
+    </select>
+    <select id="queryOrderTrendWeek" parameterType="DateRangeStrDto" resultType="DashboardOrderTrendDto">
+        SELECT
+          day_str date,
+          SUM(IFNULL(order_place_count,0)) order_place_count,
+          SUM(IFNULL(order_place_cost,0)) order_place_cost
+        FROM
+        gene_daily_detail
+        WHERE
+        day_str <![CDATA[ >= ]]> #{startDateStr} AND
+        day_str <![CDATA[ < ]]> #{endDateStr}
+        GROUP BY day_str
+    </select>
+    <select id="queryOrderTrendHour" parameterType="DateRangeDto" resultType="DashboardOrderTrendDto">
+        SELECT
+          SUM(IFNULL(order_place_count,0)) order_place_count,
+          SUM(IFNULL(order_place_cost,0)) order_place_cost
+        FROM
+        gene_daily_detail
+        WHERE
+        day_str = #{date} AND
+        order_create_time <![CDATA[ >= ]]> #{startDate} AND
+        order_create_time <![CDATA[ < ]]> #{endDate}
+    </select>
+    <select id="queryOrderTrendHourGroup" parameterType="DateRangeDto" resultType="DashboardOrderTrendDto">
+        SELECT
+          order_create_time,
+          SUM(IFNULL(order_place_count,0)) order_place_count,
+          SUM(IFNULL(order_place_cost,0)) order_place_cost
+        FROM
+        gene_daily_detail
+        WHERE
+        day_str = #{date} AND
+        order_create_time <![CDATA[ >= ]]> #{startDate} AND
+        order_create_time <![CDATA[ < ]]> #{endDate}
+        GROUP BY order_create_time
+    </select>
+    <select id="getOrderTrendMonthAvg" parameterType="OrderTrendMonthParamDto" resultType="OrderTrendMonthDto">
+        SELECT
+        ROUND(IFNULL(SUM(IFNULL(order_place_cost,0))/#{days},0)) order_place_avg_cost,
+        ROUND(IFNULL(SUM(IFNULL(order_place_count,0))/#{days},0)) order_place_avg_count
+        FROM
+        gene_daily_detail
+        WHERE
+        day_str IN
+        <foreach collection="holidayList" item="day" separator="," open="(" close=")">
+            #{day}
+        </foreach>
+
+    </select>
+    <select id="getOrderTrendMonthAvg1" parameterType="OrderTrendMonthParamDto">
+        SELECT
+          *
+        FROM
+          gene_daily_detail
+        WHERE
+         integral_grant_time <![CDATA[ >= ]]> #{startDate} AND
+         integral_grant_time <![CDATA[ < ]]> #{endDate}
+
+    </select>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viathink.core.business.gene.mapper.GeneYearlyDetailMapper">
+    <insert id="addGeneYearlyDetail" parameterType="GeneDetailBaseEntity">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+       INSERT INTO gene_yearly_detail
+        (<include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailInsertFiledSql" />)
+        values
+        (<include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailInsertValueSql" />)
+    </insert>
+    <update id="updateGeneYearlyDetail" parameterType="GeneDetailBaseEntity">
+        UPDATE
+            gene_yearly_detail
+        SET
+            <include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailUpdateSql" />
+        WHERE
+          id=#{id}
+    </update>
+    <update id="updateGeneYearlyDetailByOrderIdAndYearStr" parameterType="GeneDetailBaseEntity">
+        UPDATE
+            gene_yearly_detail
+        SET
+            <include refid="com.viathink.core.business.gene.mapper.GeneDetailMapper.detailUpdateSql" />
+        WHERE
+          order_id=#{orderId} AND year_str=#{yearStr}
+    </update>
+    <select id="getGeneYearlyDetailByOrderId" parameterType="String" resultType="GeneDetailBaseEntity">
+      SELECT * FROM gene_yearly_detail WHERE order_id=#{orderId}
+    </select>
+    <select id="getGeneYearlyDetailByOrderIdAndYearStr" parameterType="GeneDetailBaseEntity" resultType="GeneDetailBaseEntity">
+      SELECT * FROM gene_yearly_detail WHERE order_id=#{orderId} AND year_str=#{yearStr}
+    </select>
+    <select id="getGeneYearlyDetailById" parameterType="Long" resultType="GeneDetailBaseEntity">
+      SELECT * FROM gene_yearly_detail WHERE id=#{id}
+    </select>
+    <select id="getProfitByYearStr" parameterType="String" resultType="ProfitReportDto">
+        select
+            region.region_id region_id,
+            region.region_name region_name,
+            <include refid="com.viathink.core.business.gene.mapper.GeneMonthlyDetailMapper.selectLeftFiledSql" />
+        FROM
+            `region`
+            LEFT JOIN `gene_yearly_detail` ON `region`.region_id = `gene_yearly_detail`.local_staff_region_id
+            AND gene_yearly_detail.year_str=#{yearStr}
+        GROUP BY region.region_id
+    </select>
+    <select id="countProfitByYearStr" parameterType="String" resultType="ProfitReportDto">
+        select
+            <include refid="com.viathink.core.business.gene.mapper.GeneMonthlyDetailMapper.selectLeftFiledSql" />
+        FROM
+            `region`
+            LEFT JOIN `gene_yearly_detail` ON `region`.region_id = `gene_yearly_detail`.local_staff_region_id
+            AND gene_yearly_detail.year_str=#{yearStr}
+    </select>
+    <select id="getSnapshootRecordByYearlyStrAndGroupByRegionId" parameterType="String" resultType="RegionSnapshootRecordDto">
+        select
+            region_id,
+            region_name,
+            <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+        from region
+        LEFT JOIN gene_yearly_detail ON
+            local_staff_region_id = region_id AND
+            year_str=#{value}
+        GROUP BY
+            region_id
+    </select>
+    <select id="getSnapshootRecordByYearlyStrAndGroupByProvinceId" parameterType="String" resultType="ProvinceSnapshootRecordDto">
+        select
+            province_id,
+            province_name,
+            <include refid="com.viathink.core.business.gene.mapper.GeneDailyDetailMapper.selectGroupFeildSql"/>
+        from province
+        LEFT JOIN gene_yearly_detail ON
+            local_staff_province_id = province_id AND
+            year_str=#{value}
+        GROUP BY
+            province_id
+    </select>
+</mapper>

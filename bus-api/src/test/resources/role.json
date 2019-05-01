@@ -1,0 +1,14 @@
+[
+  {
+    "name": "boss",
+    "label": "领导"
+  },
+  {
+    "name": "admin",
+    "label": "管理员"
+  },
+  {
+    "name": "finance",
+    "label": "财务"
+  }
+]

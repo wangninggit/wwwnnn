@@ -1,0 +1,31 @@
+{
+  "id": 7,
+  "tag": "order",
+  "event": "orderInvoiced",
+  "eventTime": 1528798313000,
+  "data": {
+    "orderIds": [
+      "GTON-20180612-0001"
+    ],
+    "invoiceDate": "2018年6月12日",
+    "invoiceGoodsCodeVersion": "1",
+    "invoiceTaxClassificationCode": "1.1",
+    "invoiceCode": "3200171320",
+    "invoiceNumber": "43641694",
+    "invoiceBuyerName": "王伟",
+    "invoiceBuyerTaxPayerNumber": null,
+    "invoiceBuyerAddress": null,
+    "invoiceBuyerBank": null,
+    "invoiceItemName": "*信息技术服务*基因检测服务费",
+    "invoiceItemCount": 1,
+    "invoiceItemUnitPrice": 1350000,
+    "invoicePostTaxAmount": 1269000,
+    "invoiceTaxRate": 6,
+    "invoiceTaxAmount": 81000,
+    "invoiceAmount": 1350000,
+    "invoiceSellerName": "江苏华生基因数据科技股份有限公司",
+    "invoiceSellerTaxpayerNumber": "913209005592111",
+    "invoiceSellerAddress": "盐城经济技术开发区希望大道南路5号4楼14、15层 0515-6669888",
+    "invoiceSellerBank": "中国农业银行盐城开发区科技支行 1041111"
+  }
+}

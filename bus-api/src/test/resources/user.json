@@ -1,0 +1,23 @@
+[
+  {
+    "email": "admin@viathink.com",
+    "phoneNumber": 18653889398,
+    "nickname": "admin",
+    "password": "3bdc32724b7b8e0a0fdffada684139ea230c6260",
+    "salt": "12345"
+  },
+  {
+    "email": "boss@viathink.com",
+    "phoneNumber": 18653889398,
+    "nickname": "boss",
+    "password": "3bdc32724b7b8e0a0fdffada684139ea230c6260",
+    "salt": "12345"
+  },
+  {
+    "email": "finance@viathink.com",
+    "phoneNumber": 18653889398,
+    "nickname": "finance",
+    "password": "3bdc32724b7b8e0a0fdffada684139ea230c6260",
+    "salt": "12345"
+  }
+]
